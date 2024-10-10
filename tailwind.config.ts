@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: [
@@ -11,16 +12,16 @@ const config: Config = {
     extend: {
       colors: {
         black: '#1B1B1B',
-        nomadBlack:'#112211',
+        nomadBlack: '#112211',
 
         green: {
-          100: '#CED8D5', 
+          100: '#CED8D5',
           200: '#0B3B2D',
-          300: '#00AC07', 
+          300: '#00AC07',
         },
         red: {
-          100: '#FFC2BA',  
-          200: '#FF472E',  
+          100: '#FFC2BA',
+          200: '#FF472E',
           300: '#FFE4E0',
         },
         orange: {
@@ -49,6 +50,35 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      const fontStyles = [
+        { size: '12px', weights: [400, 500, 600], lineHeight: '18px' }, // Text-xs
+        { size: '13px', weights: [500, 600], lineHeight: '22px' }, // Text-sm
+        { size: '14px', weights: [400, 500, 600, 700], lineHeight: '24px' }, // Text-md
+        { size: '16px', weights: [400, 500, 600, 700], lineHeight: '26px' }, // Text-lg
+        { size: '18px', weights: [400, 500, 600, 700], lineHeight: '26px' }, // Text-2lg
+        { size: '20px', weights: [400, 500, 600, 700], lineHeight: '32px' }, // Text-xl
+        { size: '24px', weights: [400, 500, 600, 700], lineHeight: '32px' }, // Text-2xl
+        { size: '32px', weights: [600, 700], lineHeight: '42px' }, // Text-3xl
+        { size: '36px', weights: [700], lineHeight: '50px' }, // 추가된 크기
+      ];
+
+      const utilities = fontStyles.flatMap(({ size, weights, lineHeight }) => {
+        return weights.map((weight) => {
+          return {
+            [`.text-${size.replace('px', '')}-${weight}`]: {
+              fontSize: size,
+              lineHeight: lineHeight,
+              fontWeight: weight.toString(),
+            },
+          };
+        });
+      });
+
+      addUtilities(utilities);
+    }),
+  ],
 };
+
 export default config;
