@@ -1,6 +1,6 @@
 
 export default function Home() {
   return (
-    <div>홈</div>
+    <div className="bg-nomadBlack">홈</div>
   );
 }
