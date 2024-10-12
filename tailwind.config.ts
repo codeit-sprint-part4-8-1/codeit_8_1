@@ -14,6 +14,11 @@ const config: Config = {
         '240': '240px',
         '550': '550px',
       },
+      screens: {
+        pc: '1280px',
+        tablet: '768px',
+        mobile: { max: '767px' },
+      },
       colors: {
         black: '#1B1B1B',
         nomadBlack: '#112211',

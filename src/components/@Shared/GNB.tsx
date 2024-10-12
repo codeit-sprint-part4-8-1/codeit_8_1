@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Menu } from '@headlessui/react';
-import logoImg from '../../../public/logo_md.svg';
-import notificationIcon from '../../../public/ico/Ico_notification.svg';
+import Image from 'next/image';
 import LogoButton from './Buttons/LogoButton';
 
 const GNB = () => {
@@ -18,7 +17,11 @@ const GNB = () => {
           <div className="flex items-center space-x-4">
             {/* 알림 버튼 */}
             <button className="text-gray-700 hover:text-blue-500">
-              <img src="notificationIcon" className="w-6 h-6" />
+              <Image
+                src="/Ico_notification.svg"
+                alt="종모양 아이콘(알림)"
+                className="w-6 h-6"
+              />
             </button>
 
             {/* 프로필 드롭다운 */}
