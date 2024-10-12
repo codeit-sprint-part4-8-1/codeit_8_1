@@ -13,7 +13,6 @@ const config: Config = {
       colors: {
         black: '#1B1B1B',
         nomadBlack: '#112211',
-
         green: {
           100: '#CED8D5',
           200: '#0B3B2D',
