@@ -25,3 +25,11 @@ body {
     text-wrap: balance;
   }
 }
+
+@layer components {
+  /* 스크롤바 스타일 */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
