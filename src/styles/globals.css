@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'pretendard';
+  src: url('../../public/fonts/PretendardVariable.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,7 +24,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'pretendard', sans-serif;
 }
 
 @layer utilities {
