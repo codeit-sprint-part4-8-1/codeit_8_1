@@ -17,12 +17,12 @@ const config: Config = {
       screens: {
         pc: '1280px',
         tablet: '768px',
+        tablet2: { max: '1279px' },
         mobile: { max: '767px' },
       },
       colors: {
         black: '#1B1B1B',
         nomadBlack: '#112211',
-
         green: {
           100: '#CED8D5',
           200: '#0B3B2D',
