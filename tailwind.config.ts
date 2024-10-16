@@ -17,6 +17,7 @@ const config: Config = {
       screens: {
         pc: '1280px',
         tablet: '768px',
+        tablet2: { max: '1279px' },
         mobile: { max: '767px' },
       },
       colors: {
