@@ -3,9 +3,6 @@ import DatePicker from 'react-datepicker';
 import { format } from 'date-fns';
 import 'react-datepicker/dist/react-datepicker.css'; // 기본 CSS 적용
 
-// CSS 커스터마이징을 위한 추가 스타일링
-import './datepicker-custom.css';
-
 const CalendarDropdown = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isOpen, setIsOpen] = useState(false);
