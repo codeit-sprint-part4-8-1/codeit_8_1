@@ -38,6 +38,15 @@ export default function Banner() {
     }, 400); // fadeOut과 맞추기
   };
 
+  const handleResize = () => {
+    setFadeClass('animate-fadeIn');
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [fadeClass]);
+
   return (
     <Swiper
       spaceBetween={30}
@@ -68,7 +77,7 @@ export default function Banner() {
             className={`relative container flex flex-col justify-center w-full mx-auto h-full px-4 text-white ${fadeClass}`}
           >
             <h2
-              className={`text-2xl sm:text-5xl md:text-7xl font-bold sm:leading-tight mb-3 sm:mb-5 `}
+              className={`text-2xl sm:text-5xl md:text-7xl font-bold sm:leading-tight md:leading-tight mb-3 sm:mb-5 `}
             >
               {slide.title.split('\n').map((line, i) => (
                 <span key={i}>
