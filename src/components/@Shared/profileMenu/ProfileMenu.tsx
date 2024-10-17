@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ButtonHTMLAttributes, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MyPageProfileMenu } from '@/types/myPage/type';
 import DefaultProfile from '../../../public/image/defaultProfile.webp';
 import IcoPen from '../../../public/ico/ico_pen.svg';
