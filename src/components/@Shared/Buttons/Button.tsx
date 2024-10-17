@@ -1,18 +1,27 @@
 import clsx from "clsx";
 
-const Button = ({
+export const Button = ({
   label,
   variant,
-  disabled,
+  disabled=false,
   onClick,
+  className,
+  ...props
 }: ButtonProps ) => {
   return(<button
+    disabled={disabled}
+    onClick={onClick}
   className={
     clsx(
-      {'bg-black': variant === 'solid'},
-      {'bg-gray': variant === 'line'},
+      className,
+      'h-[38px] rounded-[6px] text-14-700',
+      {'bg-gray-600 text-white border-none': disabled},
+      {'bg-nomadBlack text-white': variant === 'solid'},
+      {'bg-white border border-nomadBlack text-nomadBlack': variant === 'line'},
+      
     )
   }
+  {...props}
   >
     {label}
   </button>)
@@ -23,4 +32,5 @@ interface ButtonProps {
   variant : 'solid' | 'line', 
   disabled? : boolean,
   onClick? : ()=>{},
+  className? : string,
 }
