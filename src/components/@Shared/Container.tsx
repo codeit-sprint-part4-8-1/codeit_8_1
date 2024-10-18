@@ -10,7 +10,9 @@ export default function Container({
   fullWidth = false,
 }: ContainerProps) {
   return (
-    <div className={fullWidth ? 'w-full' : 'max-w-screen-xl mx-auto px-4'}>
+    <div
+      className={fullWidth ? 'w-full' : 'w-full max-w-screen-xl mx-auto px-4'}
+    >
       {children}
     </div>
   );
