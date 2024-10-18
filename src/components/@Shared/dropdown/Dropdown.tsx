@@ -14,7 +14,7 @@ const Dropdown = () => {
   };
 
   return (
-    <div className="relative w-[800px]">
+    <div className="relative w-full">
       <button
         onClick={toggleDropdown}
         className="w-full bg-white border border-gray-300 rounded-md px-4 py-3 text-left flex justify-between items-center"
@@ -31,9 +31,9 @@ const Dropdown = () => {
             <li
               key={category}
               onClick={() => selectCategory(category)}
-              className={`cursor-pointer px-4 py-3 flex items-center rounded-md ${
+              className={`cursor-pointer px-4 py-2 flex items-center rounded-md ${
                 selectedCategory === category
-                  ? 'bg-emerald-950 text-white'
+                  ? 'bg-nomadBlack text-white'
                   : 'hover:bg-gray-200'
               }`}
             >
