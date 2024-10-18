@@ -6,7 +6,7 @@ import IcoPen from '../../../public/ico/ico_pen.svg';
 import IcoMyInfo from '../../../public/ico/ico_myInfo.svg';
 import IcoHistory from '../../../public/ico/ico_history.svg';
 import IcoManagement from '../../../public/ico/ico_management.svg';
-import IcoStatus from '../../../public/ico/Ico_status.svg';
+import IcoStatus from '../../../public/ico/ico_status.svg';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { fetchImageUrl, fetchLoginTest, updateImage } from '@/apis/myInfo/api';

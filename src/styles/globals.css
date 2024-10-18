@@ -39,9 +39,9 @@ body {
     width: 0;
     height: 0;
   }
-  footer {
-    position: relative; /* 푸터가 상대적으로 위치하게 함 */
-    bottom: 0; /* 아래로 고정 */
-    width: 100%; /* 전체 너비 차지 */
-  }
+}
+footer {
+  position: relative; /* 푸터가 상대적으로 위치하게 함 */
+  bottom: 0; /* 아래로 고정 */
+  width: 100%; /* 전체 너비 차지 */
 }
