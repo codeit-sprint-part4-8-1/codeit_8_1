@@ -5,6 +5,6 @@ cd ../
 
 mkdir output
 
-cp -R ./[team-repo-name]/* ./output
+cp -R ./codeit_8_1/* ./output
 
-cp -R ./output ./[team-repo-name]/
+cp -R ./output ./codeit_8_1/
