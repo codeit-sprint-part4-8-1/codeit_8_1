@@ -57,6 +57,31 @@ const config: Config = {
           900: '#79747E',
         },
       },
+      backgroundImage: {
+        'main-banner':
+          'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 100%)',
+      },
+      animation: {
+        fadeIn: 'fadeIn 3s forwards',
+        fadeOut: 'fadeOut 0.4s forwards',
+        backgroundMove: 'backgroundMove 3s forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0', transform: 'translateY(110px)' },
+          '50%': { opacity: '1', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeOut: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '0' },
+        },
+        backgroundMove: {
+          '0%': { 'background-position': 'center center' },
+          '50%': { 'background-position': 'center 70%' },
+          '100%': { 'background-position': 'center center' },
+        },
+      },
     },
   },
   plugins: [
