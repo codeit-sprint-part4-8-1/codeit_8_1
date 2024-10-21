@@ -18,7 +18,7 @@ export const Button = ({
       {'bg-gray-600 text-white border-none': disabled},
       {'bg-nomadBlack text-white': variant === 'solid'},
       {'bg-white border border-nomadBlack text-nomadBlack': variant === 'line'},
-      
+
     )
   }
   {...props}
@@ -33,4 +33,5 @@ interface ButtonProps {
   disabled? : boolean,
   onClick? : ()=>{},
   className? : string,
+  type? : "button" | "reset" | "submit",
 }
