@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/@Shared/Buttons/Button';
 import DropDownMenu from '@/components/@Shared/dropDown/DropDownMenu';
-import ProfileMenu from '@/components/myPage/ProfileMenu';
+import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
+import useInfiniteScroll from '@/hook/useInfiniteScroll';
 
 export default function History() {
   const MENU_LIST = [
@@ -11,10 +13,15 @@ export default function History() {
     '체험 완료',
   ];
 
-  const arrayList = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-  ];
-  console.log(arrayList);
+  const [items, setItems] = useState([...Array(10).keys()]); // 임시 10개의 배열
+  const [hasMore, setHasMore] = useState(true); // 추가 데이터를 불러올 수 있는 상태
+
+  useInfiniteScroll({
+    hasMore,
+    setHasMore,
+    setItems,
+  });
+
   return (
     <div className="flex mt-20">
       <ProfileMenu />
@@ -24,7 +31,7 @@ export default function History() {
           <DropDownMenu size="large" filterList={MENU_LIST} />
         </div>
         <div>
-          {arrayList.map((array) => {
+          {items.map((array) => {
             return (
               <div
                 key={array}
@@ -47,7 +54,7 @@ export default function History() {
                   <div className="flex justify-between">
                     <span className="text-2xl">₩10,000</span>
                     <Button
-                      label="에약 취소"
+                      label="예약 취소"
                       variant="line"
                       className="w-36 h-11"
                     />
@@ -56,6 +63,9 @@ export default function History() {
               </div>
             );
           })}
+          {hasMore && (
+            <p className="text-center mt-4">데이터를 가져오고 있습니다.</p>
+          )}
         </div>
       </div>
     </div>

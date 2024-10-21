@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import useProfileImage from '../../../hook/useProfileImage';
 
 interface ProfileMenuProps {
-  profileImageUrl: string | undefined;
+  profileImageUrl?: string | undefined;
 }
 
 export default function ProfileMenu({ profileImageUrl }: ProfileMenuProps) {
