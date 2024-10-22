@@ -1,18 +1,15 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: `https://sp-globalnomad-api.vercel.app/8-1`,
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('userInfo');
+    const token = localStorage.getItem('accessToken');
 
-    if (token) {
-      const userInfo = JSON.parse(token);
-      const userInfoAccessToken = userInfo.accessToken;
-      config.headers.Authorization = `Bearer ${userInfoAccessToken}`;
-    }
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    
 
     return config;
   },

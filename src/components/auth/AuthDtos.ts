@@ -3,5 +3,7 @@ export interface signUpFormData {
   nickname: string;
   password: string;
 }
-
-
+export interface LoginFormData {
+  email: string;
+  password: string;
+}
