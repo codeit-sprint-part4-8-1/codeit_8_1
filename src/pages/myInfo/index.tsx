@@ -5,18 +5,10 @@ import { UserInfo } from '@/types/myPage/type';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Suspense, useEffect } from 'react';
+import useUserInfo from '@/hook/useUserInfo';
 
 export default function MyInfo() {
-  const { data, isLoading } = useQuery<UserInfo>({
-    queryKey: ['userInfo'],
-    queryFn: async () => {
-      const userInfo = await fetchUserInfo();
-      if (!userInfo) {
-        throw new Error('유저 정보를 찾지 못했습니다.'); // 에러 처리
-      }
-      return userInfo;
-    },
-  });
+  const { data, isLoading } = useUserInfo();
 
   // 로그인 기능구현전이어서 임시로 구현
   const getLoginTest = async () => {

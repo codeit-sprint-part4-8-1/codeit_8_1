@@ -5,6 +5,7 @@ import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
 import ConfirmModal from '@/components/@Shared/modal/ConfirmModal';
 import ModalFrame from '@/components/@Shared/modal/ModalFrame';
+import useUserInfo from '@/hook/useUserInfo';
 
 export default function History() {
   const MENU_LIST = [
@@ -15,6 +16,7 @@ export default function History() {
     '체험 완료',
   ];
 
+  const { data, isLoading } = useUserInfo();
   const [items, setItems] = useState([...Array(10).keys()]); // 임시 10개의 배열
   const [hasMore, setHasMore] = useState(true); // 추가 데이터를 불러올 수 있는 상태
   const [isOpen, setIsOpen] = useState(false);
@@ -25,12 +27,16 @@ export default function History() {
     setItems,
   });
 
+  if (isLoading) {
+    return <div>로딩중...</div>;
+  }
+
   return (
     <div className="flex mt-20">
       <ModalFrame isOpen={isOpen}>
         <ConfirmModal isOpen={isOpen} setIsOpen={setIsOpen} />
       </ModalFrame>
-      <ProfileMenu />
+      <ProfileMenu profileImageUrl={data?.profileImageUrl} />
       <div className="w-full ml-6">
         <div className="flex justify-between items-center w-full mb-[16px]">
           <h2 className="text-[32px] font-bold">예약 내역</h2>
