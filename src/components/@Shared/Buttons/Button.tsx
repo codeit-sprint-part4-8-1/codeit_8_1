@@ -24,6 +24,7 @@ export const Button = ({
   {...props}
   >
     {label}
+    <span>{`${disabled}`}</span>
   </button>)
 }
 
