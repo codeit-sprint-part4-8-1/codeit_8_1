@@ -9,7 +9,13 @@ import Footer from '@/components/@Shared/Footer';
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isMainPage = router.pathname === '/'; // 메인 페이지 여부 확인
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        throwOnError: true,
+      },
+    },
+  });
 
   return (
     <div className="flex flex-col min-h-screen">

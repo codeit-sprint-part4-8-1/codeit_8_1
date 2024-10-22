@@ -2,11 +2,12 @@ import { fetchLoginTest, fetchUserInfo } from '@/apis/myInfo/api';
 import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
 import MyInfoForm from '@/components/myInfo/MyInfoForm';
 import { UserInfo } from '@/types/myPage/type';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Suspense, useEffect } from 'react';
 
 export default function MyInfo() {
-  const { data, isError } = useSuspenseQuery<UserInfo>({
+  const { data, isLoading } = useQuery<UserInfo>({
     queryKey: ['userInfo'],
     queryFn: async () => {
       const userInfo = await fetchUserInfo();
@@ -33,16 +34,16 @@ export default function MyInfo() {
     getLoginTest();
   }, []);
 
-  if (isError) {
-    return <div>에러...</div>;
+  if (isLoading) {
+    return <div>로딩중...</div>;
   }
 
   return (
-    <div className="flex justify-center w-full gap-6 mt-20 mb-20">
-      <Suspense fallback={<div>로딩중...</div>}>
+    <ErrorBoundary fallback={<div>에러</div>}>
+      <div className="flex justify-center w-full gap-6 mt-20 mb-20">
         <ProfileMenu profileImageUrl={data?.profileImageUrl} />
         <MyInfoForm nickname={data?.nickname} email={data?.email} />
-      </Suspense>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }
