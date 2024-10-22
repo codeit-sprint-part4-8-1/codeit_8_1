@@ -94,8 +94,10 @@ export default function ProfileMenu({ profileImageUrl }: ProfileMenuProps) {
               <li key={menu.link}>
                 <Link
                   href={menu.link}
-                  className={`w-full h-11 px-4 flex items-center rounded-xl text-base font-bold hover:bg-green-100 hover:text-nomadBlack ${
-                    isActive ? 'text-nomadBlack bg-green-100' : 'text-gray-600'
+                  className={`w-full h-11 px-4 flex items-center rounded-xl text-base font-bold transition-all ${
+                    isActive
+                      ? 'text-nomadBlack bg-green-100 hover:bg-green-100 hover:text-nomadBlack'
+                      : 'text-gray-600 hover:bg-gray-200'
                   } `}
                   onClick={() => handleMenuClick(menu.link)}
                 >
