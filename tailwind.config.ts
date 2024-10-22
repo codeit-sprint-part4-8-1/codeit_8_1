@@ -65,6 +65,8 @@ const config: Config = {
         fadeIn: 'fadeIn 3s forwards',
         fadeOut: 'fadeOut 0.4s forwards',
         backgroundMove: 'backgroundMove 3s forwards',
+        modalFadeIn: 'modalFadeIn 0.5s forwards',
+        modalFadeOut: 'modalFadeOut 0.5s forwards',
       },
       keyframes: {
         fadeIn: {
@@ -80,6 +82,14 @@ const config: Config = {
           '0%': { 'background-position': 'center center' },
           '50%': { 'background-position': 'center 70%' },
           '100%': { 'background-position': 'center center' },
+        },
+        modalFadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        modalFadeOut: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
         },
       },
     },

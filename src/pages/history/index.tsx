@@ -3,6 +3,8 @@ import { Button } from '@/components/@Shared/Buttons/Button';
 import DropDownMenu from '@/components/@Shared/dropDown/DropDownMenu';
 import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
 import useInfiniteScroll from '@/hook/useInfiniteScroll';
+import ConfirmModal from '@/components/@Shared/modal/ConfirmModal';
+import ModalFrame from '@/components/@Shared/modal/ModalFrame';
 
 export default function History() {
   const MENU_LIST = [
@@ -15,6 +17,7 @@ export default function History() {
 
   const [items, setItems] = useState([...Array(10).keys()]); // 임시 10개의 배열
   const [hasMore, setHasMore] = useState(true); // 추가 데이터를 불러올 수 있는 상태
+  const [isOpen, setIsOpen] = useState(false);
 
   useInfiniteScroll({
     hasMore,
@@ -24,6 +27,9 @@ export default function History() {
 
   return (
     <div className="flex mt-20">
+      <ModalFrame isOpen={isOpen}>
+        <ConfirmModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      </ModalFrame>
       <ProfileMenu />
       <div className="w-full ml-6">
         <div className="flex justify-between items-center w-full mb-[16px]">
@@ -57,6 +63,9 @@ export default function History() {
                       label="예약 취소"
                       variant="line"
                       className="w-36 h-11"
+                      onClick={() => {
+                        isOpen || setIsOpen(true);
+                      }}
                     />
                   </div>
                 </div>
