@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Category from '@/components/@Shared/dropDown/Dropdown';
+import Category from '@/components/@Shared/dropdown/Dropdown';
 
 const ExperienceForm = () => {
   const [availableTimes, setAvailableTimes] = useState([
