@@ -19,8 +19,8 @@ export const Button = ({
           'bg-gray-600 text-white border-none': disabled, // disabled 상태일 때 우선 적용
         },
         !disabled && { // disabled가 아닐 때만 variant에 따라 클래스 적용
-          'bg-nomadBlack text-white': variant === 'solid',
-          'bg-white border border-nomadBlack text-nomadBlack': variant === 'line',
+          'bg-nomadBlack hover:bg-[#234223] text-white': variant === 'solid',
+          'bg-white border hover:bg-[#edf2ed] border-nomadBlack text-nomadBlack': variant === 'line',
         }
       )}
       {...props}

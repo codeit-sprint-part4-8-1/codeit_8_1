@@ -1,12 +1,17 @@
 import { FC, useState } from 'react';
 import { Button } from "@/components/@Shared/Buttons/Button";
 import { useForm } from 'react-hook-form';
-import { signUpFormData } from './AuthDtos';
+import { signUpFormData, signUpFormDataWithRepeat } from './AuthDtos';
 import AuthInput from './AuthInput';
 import clsx from 'clsx';
 import createValidations from './Validations';
 import { axiosInstance } from '@/apis/instance/axiosInstance';
 import { useRouter } from 'next/router'; // useRouter import 추가
+
+
+type passwordRepeatType = {
+  "password-repeat" : string;
+}
 
 const SignUpForm: FC = () => {
   const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm<signUpFormData>({ mode: 'onBlur' });
@@ -15,8 +20,8 @@ const SignUpForm: FC = () => {
 
   const Validations = createValidations(watch('password'));
 
-  const handleBlur = async (name: keyof signUpFormData) => {
-    const result = await trigger(name); // 특정 필드만 검사
+  const handleBlur = async (name: keyof Partial<signUpFormDataWithRepeat>) => {
+    const result = await trigger(name as any); // 특정 필드만 검사
     const allFieldsFilled = Object.values(watch()).every(value => value !== ""); // 모든 필드가 채워졌는지 체크
     setIsButtonValid(result && allFieldsFilled); // 유효성 검사 결과와 필드 채워짐 여부에 따라 버튼 상태 업데이트
   };
@@ -44,7 +49,7 @@ const SignUpForm: FC = () => {
       <AuthInput label="닉네임" register={register} name="nickname" validation={Validations.nickname} errors={errors} onBlur={() => handleBlur('nickname')} />
       <AuthInput label="비밀번호" register={register} name="password" validation={Validations.password} errors={errors} onBlur={() => handleBlur('password')} />
       <AuthInput label="비밀번호 확인" register={register} name="password-repeat" validation={Validations.passwordRepeat} errors={errors} onBlur={() => handleBlur('password-repeat')} />
-      <Button variant="solid" label="회원가입 하기" type="submit" disabled={!isButtonValid} />
+      <Button variant="line" label="회원가입 하기" type="submit" disabled={!isButtonValid} className="h-[48px]" />
     </form>
   );
 };
