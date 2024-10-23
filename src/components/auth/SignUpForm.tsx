@@ -8,35 +8,54 @@ import createValidations from './Validations';
 import { axiosInstance } from '@/apis/instance/axiosInstance';
 import { useRouter } from 'next/router'; // useRouter import 추가
 import Modal from './modal';
+import axios from 'axios';
+
 const SignUpForm: FC = () => {
   const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm<signUpFormData>({ mode: 'onBlur' });
-  const [isButtonValid, setIsButtonValid] = useState<boolean>(false);
-  const [modalOpen, setModalOpen ] = useState<boolean>(false);
-  const router = useRouter(); // useRouter 훅 사용
+  const [ isButtonValid, setIsButtonValid ] = useState<boolean>(false);
+  const [ modalOpen, setModalOpen ] = useState<boolean>(false);
+  const [ modalMessage, setModalMessage ] = useState<string>('');
+  const [ isLoginSuccess, setIsLoginSuccess ] = useState<boolean>(true);
+
+  const router = useRouter();
 
   const Validations = createValidations(watch('password'));
 
   const handleBlur = async (name: keyof Partial<signUpFormDataWithRepeat>) => {
-    const result = await trigger(name as any); // 특정 필드만 검사
-    const allFieldsFilled = Object.values(watch()).every(value => value !== ""); // 모든 필드가 채워졌는지 체크
-    setIsButtonValid(result && allFieldsFilled); // 유효성 검사 결과와 필드 채워짐 여부에 따라 버튼 상태 업데이트
+    const result = await trigger(name as any); 
+    const allFieldsFilled = Object.values(watch()).every(value => value !== ""); 
+    setIsButtonValid(result && allFieldsFilled);
   };
 
   const onSubmit = async (data: signUpFormData) => {
     try {
-      const response = await axiosInstance.post('/users', data); // 회원가입 API 요청
-      alert('회원가입 성공: ' + JSON.stringify(response.data));
-      router.push('/login'); // 회원가입 성공 후 로그인 페이지로 이동
+      const response = await axiosInstance.post('/users', data); 
+      setIsLoginSuccess(true);
+      setModalMessage(`회원가입 성공`);
+      setModalOpen(true);
+     
     } catch (error) {
-      console.error('회원가입 실패:', error);
-      alert('회원가입 실패');
+      if(axios.isAxiosError(error)){
+        console.log(`error : `)
+        console.log(error.response?.data.message);
+        setIsLoginSuccess(false);
+        setModalMessage(error.response?.data.message);
+        setModalOpen(true);
+      }
     }
   }
 
+  const modalClose = (type : string, isLoginSuccess : boolean )=> {
+    setModalOpen(false);
+    if(isLoginSuccess) {
+      if(type === 'login') router.push('/');
+      if(type === 'signUp') router.push('/login');
+    }
+  }
   return (
     <>
-    <button onClick={()=> {setModalOpen(true)}}>모달 생성</button>
-    <Modal isOpen={modalOpen} onClose={()=>setModalOpen(false)} title='테스트 모달' />
+
+    <Modal isOpen={modalOpen} onClose={()=>modalClose('signUp', isLoginSuccess) } message={modalMessage} />
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={clsx(
