@@ -7,15 +7,11 @@ import clsx from 'clsx';
 import createValidations from './Validations';
 import { axiosInstance } from '@/apis/instance/axiosInstance';
 import { useRouter } from 'next/router'; // useRouter import 추가
-
-
-type passwordRepeatType = {
-  "password-repeat" : string;
-}
-
+import Modal from './modal';
 const SignUpForm: FC = () => {
   const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm<signUpFormData>({ mode: 'onBlur' });
   const [isButtonValid, setIsButtonValid] = useState<boolean>(false);
+  const [modalOpen, setModalOpen ] = useState<boolean>(false);
   const router = useRouter(); // useRouter 훅 사용
 
   const Validations = createValidations(watch('password'));
@@ -38,6 +34,9 @@ const SignUpForm: FC = () => {
   }
 
   return (
+    <>
+    <button onClick={()=> {setModalOpen(true)}}>모달 생성</button>
+    <Modal isOpen={modalOpen} onClose={()=>setModalOpen(false)} title='테스트 모달' />
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={clsx(
@@ -49,8 +48,9 @@ const SignUpForm: FC = () => {
       <AuthInput label="닉네임" register={register} name="nickname" validation={Validations.nickname} errors={errors} onBlur={() => handleBlur('nickname')} />
       <AuthInput label="비밀번호" register={register} name="password" validation={Validations.password} errors={errors} onBlur={() => handleBlur('password')} />
       <AuthInput label="비밀번호 확인" register={register} name="password-repeat" validation={Validations.passwordRepeat} errors={errors} onBlur={() => handleBlur('password-repeat')} />
-      <Button variant="line" label="회원가입 하기" type="submit" disabled={!isButtonValid} className="h-[48px]" />
+      <Button variant="solid" label="회원가입 하기" type="submit" disabled={!isButtonValid} className="h-[48px]" />
     </form>
+    </>
   );
 };
 
