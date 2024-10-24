@@ -6,19 +6,18 @@ import AuthInput from './AuthInput';
 import clsx from 'clsx';
 import createValidations from './Validations';
 import { axiosInstance } from '@/apis/instance/axiosInstance';
-import { useRouter } from 'next/router'; // useRouter import 추가
 import Modal from './modal';
 import axios from 'axios';
+import useModalClose from './modalClose';
 
 const SignUpForm: FC = () => {
   const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm<signUpFormData>({ mode: 'onBlur' });
   const [ isButtonValid, setIsButtonValid ] = useState<boolean>(false);
   const [ modalOpen, setModalOpen ] = useState<boolean>(false);
   const [ modalMessage, setModalMessage ] = useState<string>('');
-  const [ isLoginSuccess, setIsLoginSuccess ] = useState<boolean>(true);
+  const [ isSignUpSuccess, setIsSignUpSuccess ] = useState<boolean>(true);
 
-  const router = useRouter();
-
+  const modalClose = useModalClose();
   const Validations = createValidations(watch('password'));
 
   const handleBlur = async (name: keyof Partial<signUpFormDataWithRepeat>) => {
@@ -29,8 +28,9 @@ const SignUpForm: FC = () => {
 
   const onSubmit = async (data: signUpFormData) => {
     try {
-      const response = await axiosInstance.post('/users', data); 
-      setIsLoginSuccess(true);
+      const response = await axiosInstance.post('/users', data);
+      console.log(response.data);
+      setIsSignUpSuccess(true);
       setModalMessage(`회원가입 성공`);
       setModalOpen(true);
      
@@ -38,24 +38,16 @@ const SignUpForm: FC = () => {
       if(axios.isAxiosError(error)){
         console.log(`error : `)
         console.log(error.response?.data.message);
-        setIsLoginSuccess(false);
+        setIsSignUpSuccess(false);
         setModalMessage(error.response?.data.message);
         setModalOpen(true);
       }
     }
   }
 
-  const modalClose = (type : string, isLoginSuccess : boolean )=> {
-    setModalOpen(false);
-    if(isLoginSuccess) {
-      if(type === 'login') router.push('/');
-      if(type === 'signUp') router.push('/login');
-    }
-  }
   return (
     <>
-
-    <Modal isOpen={modalOpen} onClose={()=>modalClose('signUp', isLoginSuccess) } message={modalMessage} />
+    <Modal isOpen={modalOpen} onClose={()=>modalClose({type : 'signUp', isSuccess :isSignUpSuccess, setModalOpen}) } message={modalMessage} />
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={clsx(
