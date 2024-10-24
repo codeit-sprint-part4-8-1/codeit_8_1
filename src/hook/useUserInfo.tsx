@@ -7,7 +7,6 @@ export default function useUserInfo() {
     queryKey: ['userInfo'],
     queryFn: async () => {
       const userInfo = await fetchUserInfo();
-      console.log(userInfo); // API 응답 로그
       if (!userInfo) {
         throw new Error('유저 정보를 찾지 못했습니다.'); // 에러 처리
       }
