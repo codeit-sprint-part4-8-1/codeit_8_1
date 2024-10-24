@@ -35,4 +35,5 @@ interface ButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  type?: 'submit' | 'reset' | 'button' | undefined;
 }
