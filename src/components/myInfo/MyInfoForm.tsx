@@ -72,9 +72,11 @@ export default function MyInfoForm({ nickname, email }: MyInfoFormProps) {
     const newPassword = password || undefined;
 
     try {
-      await updateUserInfo(nickname, newPassword);
+      const res = await updateUserInfo(nickname, newPassword);
       toast.success('정보가 수정되었습니다.');
       setConfettiVisible(true);
+
+      setValue('nickname', res.nickname); // 수정된 닉네임 값 적용
 
       setTimeout(() => {
         setConfettiVisible(false);
