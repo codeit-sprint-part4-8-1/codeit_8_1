@@ -45,3 +45,30 @@ footer {
   bottom: 0; /* 아래로 고정 */
   width: 100%; /* 전체 너비 차지 */
 }
+
+.fc-evnet .fc-daygrid-event .fc-h-evnet {
+  border: none;
+}
+
+.fc-event {
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.fc-ev .fc .fc-daygrid-event {
+  display: flex;
+  align-items: flex-end;
+}
+
+.fc-daygrid-day-frame {
+  height: 154px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding-bottom: 0;
+  cursor: pointer;
+}
