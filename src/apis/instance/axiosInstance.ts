@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: `https://sp-globalnomad-api.vercel.app/8-1`,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 axiosInstance.interceptors.request.use(

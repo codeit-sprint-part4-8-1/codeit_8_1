@@ -6,7 +6,7 @@ import AuthInput from './AuthInput';
 import clsx from 'clsx';
 import createValidations from './Validations';
 import { axiosInstance } from '@/apis/instance/axiosInstance';
-import Modal from './modal';
+import Modal from './Modal';
 import axios from 'axios';
 import useModalClose from './modalClose';
 

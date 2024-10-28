@@ -7,7 +7,7 @@ import clsx from 'clsx';
 
 import createValidations from './Validations';
 import { LoginFormData } from './AuthDtos';
-import Modal from './modal';
+import Modal from './Modal';
 import useModalClose from './modalClose';
 import axios from 'axios';
 
@@ -18,7 +18,6 @@ const LoginForm: FC = () => {
   const [ modalOpen, setModalOpen ] = useState<boolean>(false);
   const [ modalMessage, setModalMessage ] = useState<string>('');
   const [ isLoginSuccess, setIsLoginSuccess ] = useState<boolean>(true);
-
   const Validations = createValidations(watch('password'));
   const modalClose = useModalClose();
   const handleBlur = async (name: keyof LoginFormData) => {
@@ -52,7 +51,6 @@ const LoginForm: FC = () => {
   }
 
 
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -65,6 +63,7 @@ const LoginForm: FC = () => {
       <AuthInput label="이메일" register={register} name="email" validation={Validations.email} onBlur={() => handleBlur('email')} errors={errors} />
       <AuthInput label="비밀번호" register={register} name="password" validation={Validations.password} onBlur={() => handleBlur('password')} errors={errors} />
       <Button variant="solid" label="로그인 하기" type="submit" disabled={!isButtonValid} />
+
     </form>
   );
 };

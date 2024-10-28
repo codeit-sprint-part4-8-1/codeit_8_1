@@ -18,7 +18,6 @@ const Modal = ({isOpen, message, onClose} : ModalProps) => {
     </div>
   ) 
 } else return;
-  
 }
 
 export default Modal;
