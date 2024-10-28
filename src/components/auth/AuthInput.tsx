@@ -13,7 +13,7 @@ interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const AuthInput: FC<AuthInputProps> = ({ type = 'text', label, register, name, validation, errors, ...props }) => {
-  const [ isPasswordHideOn, setIsPasswordHideOn ] = useState<boolean>(false);
+  const [ isPasswordHideOn, setIsPasswordHideOn ] = useState<boolean>(true);
   return (
     <div className="flex flex-col w-full">
       <label htmlFor={name}>
