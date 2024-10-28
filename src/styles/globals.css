@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'pretendard';
+  src: url('../../public/fonts/PretendardVariable.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,7 +24,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'pretendard', sans-serif;
 }
 
 @layer utilities {
@@ -32,9 +39,36 @@ body {
     width: 0;
     height: 0;
   }
+}
 footer {
   position: relative; /* 푸터가 상대적으로 위치하게 함 */
   bottom: 0; /* 아래로 고정 */
   width: 100%; /* 전체 너비 차지 */
 }
+
+.fc-evnet .fc-daygrid-event .fc-h-evnet {
+  border: none;
+}
+
+.fc-event {
+  border: none;
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.fc-ev .fc .fc-daygrid-event {
+  display: flex;
+  align-items: flex-end;
+}
+
+.fc-daygrid-day-frame {
+  height: 154px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding-bottom: 0;
+  cursor: pointer;
 }

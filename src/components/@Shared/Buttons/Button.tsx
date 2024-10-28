@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from 'clsx';
 
 export const Button = ({
   label,
@@ -15,6 +15,7 @@ export const Button = ({
       className={clsx(
         className,
         'h-[38px] rounded-[6px] text-14-700',
+
         {
           'bg-gray-600 text-white border-none': disabled, // disabled 상태일 때 우선 적용
         },
@@ -36,5 +37,6 @@ interface ButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+
   type?: "button" | "reset" | "submit";
 }
