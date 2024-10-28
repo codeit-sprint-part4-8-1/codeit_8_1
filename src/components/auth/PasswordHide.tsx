@@ -1,5 +1,4 @@
 import Image from "next/image"
-import { FC } from "react";
 
 interface PasswordHideButtonProps {
   isPasswordHideOn : boolean;
@@ -8,7 +7,10 @@ interface PasswordHideButtonProps {
 
 const PasswordHideButton = ({isPasswordHideOn, setIsPasswordHideOn} : PasswordHideButtonProps)=> {
   return(
-    <button onClick={()=>setIsPasswordHideOn(prev => !prev)} type="button">
+    <button 
+    onClick={()=>setIsPasswordHideOn(prev => !prev)}
+     type="button"
+     className="absolute right-3 top-[25%]">
     <Image
       src={`/ico/ico_visibility_${isPasswordHideOn ?'on.svg' : 'off.svg'}`}
       width={30}

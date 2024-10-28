@@ -55,10 +55,10 @@ const SignUpForm: FC = () => {
         'w-full',
       )}
     >
-      <AuthInput label="이메일" register={register} name="email" validation={Validations.email} errors={errors} onBlur={() => handleBlur('email')} />
-      <AuthInput label="닉네임" register={register} name="nickname" validation={Validations.nickname} errors={errors} onBlur={() => handleBlur('nickname')} />
-      <AuthInput label="비밀번호" register={register} name="password" validation={Validations.password} errors={errors} onBlur={() => handleBlur('password')} />
-      <AuthInput label="비밀번호 확인" register={register} name="password-repeat" validation={Validations.passwordRepeat} errors={errors} onBlur={() => handleBlur('password-repeat')} />
+      <AuthInput label="이메일" register={register} name="email" validation={Validations.email} errors={errors} onBlur={() => handleBlur('email')} type='email' />
+      <AuthInput label="닉네임" register={register} name="nickname" validation={Validations.nickname} errors={errors} onBlur={() => handleBlur('nickname')} type='text' />
+      <AuthInput label="비밀번호" register={register} name="password" validation={Validations.password} errors={errors} onBlur={() => handleBlur('password')} type='password' />
+      <AuthInput label="비밀번호 확인" register={register} name="password-repeat" validation={Validations.passwordRepeat} errors={errors} onBlur={() => handleBlur('password-repeat')} type='password' />
       <Button variant="solid" label="회원가입 하기" type="submit" disabled={!isButtonValid} className="h-[48px]" />
     </form>
     </>
