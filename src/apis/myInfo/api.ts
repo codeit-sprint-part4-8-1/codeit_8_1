@@ -15,7 +15,7 @@ export const fetchLoginTest = async ({
       email: userEmail,
       password: userPassword,
     });
-    localStorage.setItem('userInfo', JSON.stringify(response.data));
+    localStorage.setItem('accessToken', JSON.stringify(response.data));
     return response.data;
   } catch (error) {
     console.error(error);
