@@ -10,6 +10,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      spacing: {
+        'vw-10': '10vw',
+        'vw-15': '15vw',
+        'vw-20': '20vw',
+        'vw-25': '25vw',
+        'vw-30': '30vw',
+        'vw-35': '35vw',
+        'vw-40': '40vw',
+        'vw-45': '45vw',
+        'vw-50': '50vw',
+      },
       height: {
         '240': '240px',
         '550': '550px',

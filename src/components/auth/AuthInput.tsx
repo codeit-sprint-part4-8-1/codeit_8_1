@@ -19,15 +19,16 @@ const AuthInput: FC<AuthInputProps> = ({ type = 'text', label, register, name, v
       <label htmlFor={name}>
         {label}
       </label>
-    <div className="relative w-full">
+    <div className="relative w-full mt-2">
     <input
         {...register(name, validation)}
         placeholder={`${label}를 입력해주세요.`}
         {...props}
         className={
           clsx(
-            'w-full h-[58px] bg-white text-gray-900 text-16-400 rounded-[6px] border border-gray-900',
+            'p-5 w-full h-[58px] bg-white text-gray-900 text-16-400 rounded-[6px] border',
             {'border-red-200': errors?.[name]},
+            {'border-gray-400' : !errors?.[name]},
           )
         }
         id={name}

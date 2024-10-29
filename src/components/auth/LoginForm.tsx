@@ -62,7 +62,7 @@ const LoginForm: FC = () => {
       <Modal isOpen={modalOpen} message={modalMessage} onClose={()=> modalClose({type: 'login', isSuccess : isLoginSuccess, setModalOpen})} />
       <AuthInput label="이메일" register={register} name="email" validation={Validations.email} onBlur={() => handleBlur('email')} errors={errors} type='email' />
       <AuthInput label="비밀번호" register={register} name="password" validation={Validations.password} onBlur={() => handleBlur('password')} errors={errors} type="password"/>
-      <Button variant="solid" label="로그인 하기" type="submit" disabled={!isButtonValid} />
+      <Button variant="solid" label="로그인 하기" type="submit" disabled={!isButtonValid} className='h-[48px]' />
 
     </form>
   );
