@@ -93,18 +93,20 @@ export const fetchReservationList = async ({
   }
 };
 
+// 예약 취소
 export const cancelReservation = async (id: number) => {
   try {
     const response = await axiosInstance.patch(`/my-reservations/${id}`, {
       status: 'canceled',
     });
-    return response; // AxiosResponse를 반환
+    return response;
   } catch (error) {
     console.error(error);
-    throw error; // 에러를 다시 던져서 호출한 쪽에서 처리
+    throw error;
   }
 };
 
+// 후기 작성
 export const postReview = async ({ id, rating, content }: Review) => {
   try {
     const response = await axiosInstance.post(
