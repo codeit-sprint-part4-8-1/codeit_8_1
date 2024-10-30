@@ -1,4 +1,6 @@
+import { AxiosResponse } from 'axios';
 import { axiosInstance } from '../instance/axiosInstance';
+import { Review } from '@/types/myPage/type';
 
 interface fetchLoginTestParams {
   userEmail: string;
@@ -70,10 +72,49 @@ export const updateUserInfo = async (
   }
 };
 
-export const fetchReservationList = async () => {
+// 나의 예약 리스트
+export const fetchReservationList = async ({
+  cursorId,
+  size,
+}: {
+  cursorId?: number;
+  size: number;
+}) => {
   try {
-    const response = await axiosInstance.get('/my-reservations');
+    const response = await axiosInstance.get('/my-reservations', {
+      params: {
+        cursorId: cursorId ?? null,
+        size,
+      },
+    });
     return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const cancelReservation = async (id: number) => {
+  try {
+    const response = await axiosInstance.patch(`/my-reservations/${id}`, {
+      status: 'canceled',
+    });
+    return response; // AxiosResponse를 반환
+  } catch (error) {
+    console.error(error);
+    throw error; // 에러를 다시 던져서 호출한 쪽에서 처리
+  }
+};
+
+export const postReview = async ({ id, rating, content }: Review) => {
+  try {
+    const response = await axiosInstance.post(
+      `/my-reservations/${id}/reviews`,
+      {
+        rating,
+        content,
+      },
+    );
+    return response;
   } catch (error) {
     console.error(error);
   }
