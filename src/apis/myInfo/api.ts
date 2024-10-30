@@ -69,3 +69,12 @@ export const updateUserInfo = async (
     console.error(error);
   }
 };
+
+export const fetchReservationList = async () => {
+  try {
+    const response = await axiosInstance.get('/my-reservations');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
