@@ -173,13 +173,12 @@ const ExperienceDetail = () => {
         </button>
       </div>
       <div className="flex flex-col gap-8">
-        {experiences.map((experience, index) => (
+        {experiences.map((experience) => (
           <div
             key={experience.id}
             className="border border-gray-200 rounded-lg shadow-lg overflow-hidden w-full h-[204px] flex 
                      animate-fade-slide-up opacity-0"
             style={{
-              animationDelay: `${index * 0.1}s`,
               animationFillMode: 'forwards',
             }}
           >
@@ -221,16 +220,13 @@ const ExperienceDetail = () => {
   );
 };
 
-// Tailwind CSS 애니메이션 설정
 const styles = `
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -239,7 +235,6 @@ const styles = `
 }
 `;
 
-// style 태그를 문서에 추가
 if (typeof document !== 'undefined') {
   const styleSheet = document.createElement('style');
   styleSheet.textContent = styles;
