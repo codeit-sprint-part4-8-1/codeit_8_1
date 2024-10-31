@@ -1,8 +1,9 @@
 import Banner from '@/components/main/Banner';
+import SearchBar from '@/components/@Shared/searchBar/SearchBar';
 
 export default function Home() {
   return (
-    <div>
+    <div className="relative w-full h-full">
       {/* <div className="h-240 md:h-550 bg-gray-800 flex items-center justify-center">
         <ul>
           <li>
@@ -12,7 +13,12 @@ export default function Home() {
           </li>
         </ul>
       </div> */}
-      <Banner />
+      <div className="absolute top-0 left-0 z-10 w-full h-full">
+        <Banner />
+      </div>
+      <div className="absolute top-[180px] sm:top-[490px] left-1/2 transform -translate-x-1/2 z-20">
+        <SearchBar />
+      </div>
       <div className="text-center py-8">
         <p>메인 페이지 내용</p>
       </div>

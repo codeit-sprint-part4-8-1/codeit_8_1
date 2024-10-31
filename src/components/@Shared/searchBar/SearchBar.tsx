@@ -27,7 +27,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="relative bg-white pb-32">
+    <div className="relative bg-transparent">
       <form className="flex flex-col gap-8 rounded-2xl bg-white px-6 py-8 shadow-lg mobile:px-2 mobile:py-4 tablet2:px-4 tablet2:py-6 pc:px-6 pc:py-8">
         <label className="text-xl font-bold text-black">
           무엇을 체험하고 싶으신가요?
