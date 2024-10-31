@@ -10,6 +10,7 @@ import { fetchReservationList } from '@/apis/myInfo/api';
 import Image from 'next/image';
 import ReviewModal from '@/components/@Shared/modal/ReviewModal';
 import { Toaster } from 'react-hot-toast';
+import useObserverScroll from '@/hook/useObserverScroll';
 
 export default function History() {
   const MENU_LIST = [
@@ -46,22 +47,12 @@ export default function History() {
     initialPageParam: undefined,
   });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 0.5 },
-    );
-
-    if (loadMoreRef.current) observer.observe(loadMoreRef.current);
-
-    return () => {
-      if (loadMoreRef.current) observer.unobserve(loadMoreRef.current);
-    };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  useObserverScroll({
+    hasNextPage,
+    loadMoreRef,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
 
   const handleCancelClick = (id: number) => {
     setReservationId(id);
