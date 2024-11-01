@@ -53,15 +53,18 @@ export const updateUserInfo = async (
 export const fetchReservationList = async ({
   cursorId,
   size,
+  status,
 }: {
   cursorId?: number;
   size: number;
+  status?: string | null;
 }) => {
   try {
     const response = await axiosInstance.get('/my-reservations', {
       params: {
         cursorId: cursorId ?? null,
         size,
+        status,
       },
     });
     return response.data;

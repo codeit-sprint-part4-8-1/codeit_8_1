@@ -11,14 +11,35 @@ import Image from 'next/image';
 import ReviewModal from '@/components/@Shared/modal/ReviewModal';
 import { Toaster } from 'react-hot-toast';
 import useObserverScroll from '@/hook/useObserverScroll';
+import NotData from '@/components/history/NotData';
+import { reservationValidation } from '@/utils/reservationValidation';
 
 export default function History() {
   const MENU_LIST = [
-    '예약 신청',
-    '예약 취소',
-    '예약 승인',
-    '예약 거절',
-    '체험 완료',
+    {
+      id: null,
+      text: '전체',
+    },
+    {
+      id: 'pending',
+      text: '예약 신청',
+    },
+    {
+      id: 'canceled',
+      text: '예약 취소',
+    },
+    {
+      id: 'confirmed',
+      text: '예약 승인',
+    },
+    {
+      id: 'declined',
+      text: '예약 거절',
+    },
+    {
+      id: 'completed',
+      text: '체험 완료',
+    },
   ];
 
   const { data, isLoading } = useUserInfo();
@@ -26,8 +47,10 @@ export default function History() {
   const [confirmModalOpen, setConfirmModalOpen] = useState<boolean>(false);
   const [reviewModalOpen, setReviewModalOpen] = useState<boolean>(false);
   const [reviewData, setReviewData] = useState<any>();
-  const [reservationId, setReservationId] = useState<number>(1);
+  const [reservationId, setReservationId] = useState<number>();
+  const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const loadMoreRef = useRef(null);
+  console.log(filterStatus);
 
   const {
     data: resDataList,
@@ -36,9 +59,14 @@ export default function History() {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ['res'],
+    queryKey: ['res', filterStatus],
     queryFn: async ({ pageParam }) => {
-      const res = await fetchReservationList({ cursorId: pageParam, size: 10 });
+      const res = await fetchReservationList({
+        cursorId: pageParam,
+        size: 10,
+        status: filterStatus,
+      });
+      console.log(res);
       return res;
     },
     getNextPageParam: (lastPage) => {
@@ -47,6 +75,7 @@ export default function History() {
     initialPageParam: undefined,
   });
 
+  // 옵저버를 사용한 무한스크롤
   useObserverScroll({
     hasNextPage,
     loadMoreRef,
@@ -54,17 +83,18 @@ export default function History() {
     fetchNextPage,
   });
 
+  // 예약 취소
   const handleCancelClick = (id: number) => {
     setReservationId(id);
     setConfirmModalOpen(true);
   };
 
-  if (isLoading) {
+  if (isLoading && status === 'pending') {
     return <div>로딩중...</div>;
   }
 
   return (
-    <div className="flex mt-20">
+    <div className="flex mt-20 mb-20">
       <ModalFrame isOpen={confirmModalOpen} setIsOpen={setConfirmModalOpen}>
         <ConfirmModal
           setIsOpen={setConfirmModalOpen}
@@ -78,41 +108,20 @@ export default function History() {
       <div className="w-full ml-6">
         <div className="flex justify-between items-center w-full mb-[16px]">
           <h2 className="text-[32px] font-bold">예약 내역</h2>
-          <DropDownMenu size="large" filterList={MENU_LIST} />
+          <DropDownMenu
+            size="large"
+            setFilterStatus={setFilterStatus}
+            filterList={MENU_LIST}
+          />
         </div>
         <div>
           {resDataList ? (
             resDataList.pages
               .flatMap((page) => page.reservations)
               .map((res: any) => {
-                let statusText;
-                let statusColor;
-
-                switch (res.status) {
-                  case 'pending':
-                    statusText = '예약 완료';
-                    statusColor = 'text-blue-300';
-                    break;
-                  case 'confirmed':
-                    statusText = '예약 승인';
-                    statusColor = 'text-orange-200';
-                    break;
-                  case 'declined':
-                    statusText = '예약 거절';
-                    statusColor = 'text-red-200';
-                    break;
-                  case 'canceled':
-                    statusText = '예약 취소';
-                    statusColor = 'text-gray-900';
-                    break;
-                  case 'completed':
-                    statusText = '체험 완료';
-                    statusColor = 'text-gray-900';
-                    break;
-                  default:
-                    statusText = '상태 불명';
-                    statusColor = 'text-red-200';
-                }
+                const { statusText, statusColor } = reservationValidation(
+                  res.status,
+                );
                 return (
                   <div
                     key={res.id}
@@ -173,17 +182,7 @@ export default function History() {
                 );
               })
           ) : (
-            <div className="flex flex-col justify-center items-center gap-12 mt-28">
-              <Image
-                src="/image/notDataImage.png"
-                width={130}
-                height={177}
-                alt="데이터 없는경우 이미지"
-              />
-              <p className="text-2xl text-gray-900">
-                아직 예약한 체험이 없어요.
-              </p>
-            </div>
+            <NotData />
           )}
           {isFetchingNextPage && (
             <p className="text-center mt-4">데이터를 가져오고 있습니다.</p>

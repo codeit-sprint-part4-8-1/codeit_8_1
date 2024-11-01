@@ -26,7 +26,7 @@ export default function ProfileMenu({ profileImageUrl }: ProfileMenuProps) {
     },
     {
       name: '내 체험 관리',
-      link: '/management',
+      link: '/activities',
       defaultImage: '/ico/ico_management.svg',
       activeImage: '/ico/ico_managementActive.svg',
     },

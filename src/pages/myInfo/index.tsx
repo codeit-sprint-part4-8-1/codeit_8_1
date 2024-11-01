@@ -1,10 +1,6 @@
-import { fetchUserInfo } from '@/apis/myInfo/api';
 import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
 import MyInfoForm from '@/components/myInfo/MyInfoForm';
-import { UserInfo } from '@/types/myPage/type';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Suspense, useEffect } from 'react';
 import useUserInfo from '@/hook/useUserInfo';
 
 export default function MyInfo() {

@@ -8,7 +8,7 @@ export default function useUserInfo() {
     queryFn: async () => {
       const userInfo = await fetchUserInfo();
       if (!userInfo) {
-        throw new Error('유저 정보를 찾지 못했습니다.'); // 에러 처리
+        throw new Error('유저 정보를 찾지 못했습니다.');
       }
       return userInfo;
     },
