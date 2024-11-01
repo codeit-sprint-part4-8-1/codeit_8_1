@@ -13,6 +13,7 @@ import { Toaster } from 'react-hot-toast';
 import useObserverScroll from '@/hook/useObserverScroll';
 import NotData from '@/components/history/NotData';
 import { reservationValidation } from '@/utils/reservationValidation';
+import LoadingSpinner from '@/components/@Shared/loading/LoadingSpinner';
 
 export default function History() {
   const MENU_LIST = [
@@ -90,7 +91,7 @@ export default function History() {
   };
 
   if (isLoading && status === 'pending') {
-    return <div>로딩중...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

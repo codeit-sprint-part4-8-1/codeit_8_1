@@ -2,12 +2,13 @@ import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
 import MyInfoForm from '@/components/myInfo/MyInfoForm';
 import { ErrorBoundary } from 'react-error-boundary';
 import useUserInfo from '@/hook/useUserInfo';
+import LoadingSpinner from '@/components/@Shared/loading/LoadingSpinner';
 
 export default function MyInfo() {
   const { data, isLoading } = useUserInfo();
 
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
