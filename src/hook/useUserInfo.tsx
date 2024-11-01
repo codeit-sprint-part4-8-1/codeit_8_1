@@ -1,6 +1,6 @@
 import { fetchUserInfo } from '@/apis/myInfo/api';
 import { UserInfo } from '@/types/myPage/type';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export default function useUserInfo() {
   return useQuery<UserInfo>({

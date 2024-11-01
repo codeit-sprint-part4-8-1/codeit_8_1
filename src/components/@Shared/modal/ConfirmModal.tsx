@@ -1,12 +1,32 @@
 import Image from 'next/image';
 import { Button } from '../Buttons/Button';
-
+import { useQueryClient } from '@tanstack/react-query';
+import { cancelReservation } from '@/apis/myInfo/api';
+import toast from 'react-hot-toast';
 interface ConfirmModalProps {
-  isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  reservationId: number | undefined;
 }
 
-export default function ConfirmModal({ isOpen, setIsOpen }: ConfirmModalProps) {
+export default function ConfirmModal({
+  setIsOpen,
+  reservationId,
+}: ConfirmModalProps) {
+  const queryClient = useQueryClient();
+
+  const handleCancelReservation = async (reservationId: number) => {
+    try {
+      await cancelReservation(reservationId);
+      queryClient.invalidateQueries({ queryKey: ['res'] });
+      setIsOpen(false);
+      toast.success('예약이 취소되었습니다.');
+    } catch (error) {
+      setIsOpen(false);
+      console.error('예약취소 실패', error);
+      toast.error('예약이 취소를 실패했습니다.');
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center fixed p-6 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[300px] h-[180px] bg-white rounded-xl z-10">
       <div>
@@ -24,10 +44,19 @@ export default function ConfirmModal({ isOpen, setIsOpen }: ConfirmModalProps) {
           variant="line"
           className="w-20 h-10"
           onClick={() => {
-            isOpen && setIsOpen(false);
+            setIsOpen(false);
           }}
         />
-        <Button label="취소하기" variant="solid" className="w-20 h-10" />
+        <Button
+          label="취소하기"
+          variant="solid"
+          className="w-20 h-10"
+          onClick={() => {
+            if (reservationId) {
+              handleCancelReservation(reservationId);
+            }
+          }}
+        />
       </div>
     </div>
   );
