@@ -5,7 +5,6 @@ import LoginForm from "@/components/auth/LoginForm";
 const Login = ()=> {
   return(
     <AuthContainer>
-    <AuthLogo />
     <LoginForm />
     </AuthContainer>
   )
