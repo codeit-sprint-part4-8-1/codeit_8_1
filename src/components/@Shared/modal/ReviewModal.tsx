@@ -72,7 +72,7 @@ export default function ReviewModal({ setIsOpen, resData }: ReviewModalProps) {
   };
 
   return (
-    <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[480px] p-6 pb-10 bg-white rounded-xl z-10">
+    <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[480px] p-6 pb-10 bg-white rounded-xl z-50">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-2xl font-bold">후기 작성</h2>
         <button

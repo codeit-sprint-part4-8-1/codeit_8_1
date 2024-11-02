@@ -36,7 +36,7 @@ export default function DropDownMenu({
   const [filterText, setFilterText] = useState<string>('전체');
 
   return (
-    <div className="relative bg-white">
+    <div className="relative bg-white z-10">
       <button
         type="button"
         className={`flex justify-between items-center h-[53px] border-2 px-5 border-green-200 rounded-2xl bg-white`}
