@@ -21,10 +21,7 @@ export default function ReservationCard({
   const { statusText, statusColor } = statusValue;
 
   return (
-    <div
-      key={res.id}
-      className="flex rounded-3xl overflow-hidden border-2 border-gray-100 bg-white mb-6 shadow-[0px_0px_10px_rgba(0,0,0,0.1)]"
-    >
+    <div className="flex rounded-3xl overflow-hidden bg-white mb-6 shadow-[0px_0px_10px_rgba(0,0,0,0.1)]">
       <div
         className="w-52 h-52 bg-cover bg-center bg-no-repeat flex-shrink-0 text-[0px]"
         style={{
