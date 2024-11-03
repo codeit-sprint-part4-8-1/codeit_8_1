@@ -1,4 +1,5 @@
 
+import { axiosInstance } from '@/apis/instance/axiosInstance';
 import Banner from '@/components/main/Banner';
 
 export default function Home() {
@@ -16,6 +17,16 @@ export default function Home() {
       <Banner />
       <div className="text-center py-8">
         <p>메인 페이지 내용</p>
+        <button onClick={async()=>{
+          try{
+          const res = await axiosInstance.get('/users/me');
+          const data = res.data;
+          console.table(data);
+
+        } catch(error) {
+          console.log('메인페이지에서 에러가 발생했습니다.');
+        }
+        }}>유저정보 불러오기 테스트</button>
       </div>
     </div>
   );
