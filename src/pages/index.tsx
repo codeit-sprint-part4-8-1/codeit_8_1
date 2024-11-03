@@ -1,5 +1,4 @@
 
-import { axiosInstance } from '@/apis/instance/axiosInstance';
 import Banner from '@/components/main/Banner';
 
 export default function Home() {
