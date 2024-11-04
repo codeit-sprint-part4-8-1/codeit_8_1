@@ -25,11 +25,11 @@ const StatusCalendar = ({ activityId }: StatusCalendarProps) => {
 
   // 더미 데이터
   const dummyEvents = [
-    { title: '예약 5', start: '2024-10-09', className: 'event-pending' },
-    { title: '승인 3', start: '2024-10-10', className: 'event-confirmed' },
-    { title: '예약 5', start: '2024-10-11', className: 'event-pending' },
-    { title: '승인 3', start: '2024-10-11', className: 'event-confirmed' },
-    { title: '완료 2', start: '2024-10-12', className: 'event-completed' },
+    { title: '예약 5', start: '2024-11-09', className: 'event-pending' },
+    { title: '승인 3', start: '2024-11-10', className: 'event-confirmed' },
+    { title: '예약 5', start: '2024-11-11', className: 'event-pending' },
+    { title: '승인 3', start: '2024-11-11', className: 'event-confirmed' },
+    { title: '완료 2', start: '2024-11-12', className: 'event-completed' },
   ];
 
   const renderDayHeaderContent = (args: DayHeaderContentArg) => {
