@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import clsx from 'clsx';
 
 interface FilterList {
   id: string | null;
@@ -7,7 +8,7 @@ interface FilterList {
 }
 
 interface DropDownMenuProps {
-  size: string;
+  size?: string;
   filterList: FilterList[];
   setFilterStatus: React.Dispatch<React.SetStateAction<string | null>>;
 }
@@ -28,7 +29,6 @@ interface DropDownMenuProps {
  */
 
 export default function DropDownMenu({
-  size,
   filterList,
   setFilterStatus,
 }: DropDownMenuProps) {
@@ -39,8 +39,9 @@ export default function DropDownMenu({
     <div className="relative bg-white z-10">
       <button
         type="button"
-        className={`flex justify-between items-center h-[53px] border-2 px-5 border-green-200 rounded-2xl bg-white`}
-        style={{ width: `${size === 'small' ? '127px' : '160px'}` }}
+        className={
+          'flex justify-between items-center w-[120px] sm:w-[140px] h-10 sm:h-[53px] text-[14px] sm:text-[16px] border-2 px-3 sm:px-5 border-green-200 rounded-2xl bg-white'
+        }
         onClick={() => {
           setIsActive(!isActive);
         }}
@@ -60,19 +61,15 @@ export default function DropDownMenu({
         transition={{ duration: 0.3 }}
         className="absolute overflow-hidden mt-2"
       >
-        <ul
-          className="flex flex-col border-2 border-gray-300 rounded-md overflow-hidden"
-          style={{ width: `${size === 'small' ? '127px' : '160px'}` }}
-        >
+        <ul className="flex flex-col w-[120px] sm:w-[140px] border-2 border-gray-300 rounded-md overflow-hidden">
           {filterList.map((filter, index) => {
             const lastList = index === filterList.length - 1; // 마지막 index만 border 제외하기 위함
             return (
               <li
                 key={filter.id}
-                className={`flex justify-center items-center w-full bg-white hover:bg-gray-200 cursor-pointer  ${
+                className={`flex justify-center items-center w-full h-[45px] sm:h-[53px] text-sm sm:text-[16px] bg-white hover:bg-gray-200 cursor-pointer  ${
                   lastList || 'border-b-2 border-gray-300'
                 }`}
-                style={{ height: `${size === 'small' ? '53px' : '60px'}` }}
                 onClick={() => {
                   setFilterText(filter.text);
                   setIsActive(false);
