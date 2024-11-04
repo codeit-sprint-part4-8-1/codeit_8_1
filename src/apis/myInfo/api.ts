@@ -1,4 +1,6 @@
+import { AxiosResponse } from 'axios';
 import { axiosInstance } from '../instance/axiosInstance';
+import { Review } from '@/types/myPage/type';
 
 interface fetchLoginTestParams {
   userEmail: string;
@@ -65,6 +67,56 @@ export const updateUserInfo = async (
       newPassword,
     });
     return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 나의 예약 리스트
+export const fetchReservationList = async ({
+  cursorId,
+  size,
+}: {
+  cursorId?: number;
+  size: number;
+}) => {
+  try {
+    const response = await axiosInstance.get('/my-reservations', {
+      params: {
+        cursorId: cursorId ?? null,
+        size,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 예약 취소
+export const cancelReservation = async (id: number) => {
+  try {
+    const response = await axiosInstance.patch(`/my-reservations/${id}`, {
+      status: 'canceled',
+    });
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// 후기 작성
+export const postReview = async ({ id, rating, content }: Review) => {
+  try {
+    const response = await axiosInstance.post(
+      `/my-reservations/${id}/reviews`,
+      {
+        rating,
+        content,
+      },
+    );
+    return response;
   } catch (error) {
     console.error(error);
   }

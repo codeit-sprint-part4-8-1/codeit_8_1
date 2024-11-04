@@ -5,7 +5,6 @@ import SignUpForm from "@/components/auth/SignUpForm";
 const SignUp = ()=> {
   return(
   <AuthContainer>
-    <AuthLogo />
     <SignUpForm />
   </AuthContainer>
   )
