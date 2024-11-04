@@ -5,6 +5,8 @@
     "flowbite",
     "headlessui",
     "signup",
+    "Swipeable",
+    "Swiper",
     "tailwindcss",
     "zustand"
   ]
