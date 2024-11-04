@@ -1,6 +1,6 @@
 export interface MyPageProfileMenu {
   name: string;
-  link: string;
+  // link: string;
   defaultImage: string;
   activeImage: string;
 }
