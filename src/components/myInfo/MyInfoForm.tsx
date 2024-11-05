@@ -5,10 +5,13 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Toaster, toast } from 'react-hot-toast';
 import Confetti from 'react-confetti';
+import Image from 'next/image';
+import BackButton from './BackButton';
 
 interface MyInfoFormProps {
   nickname: string | undefined;
   email: string | undefined;
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface MyInput {
@@ -18,7 +21,11 @@ interface MyInput {
   placeholder: string;
 }
 
-export default function MyInfoForm({ nickname, email }: MyInfoFormProps) {
+export default function MyInfoForm({
+  nickname,
+  email,
+  setIsVisible,
+}: MyInfoFormProps) {
   const [confettiVisible, setConfettiVisible] = useState(false);
   const MY_INPUT_LIST: MyInput[] = [
     {
@@ -96,10 +103,13 @@ export default function MyInfoForm({ nickname, email }: MyInfoFormProps) {
   }, [nickname, email]);
 
   return (
-    <div className="w-full max-w-[790px]">
+    <div className="w-full grow-[6] shrink-1 basis-[60%]">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">내정보</h2>
+          <div className="flex items-center gap-3">
+            <BackButton setIsVisible={setIsVisible} />
+            <h2 className="text-2xl sm:text-[32px] font-bold">내정보</h2>
+          </div>
           <button
             type="submit"
             className="w-32 h-12 bg-nomadBlack text-white rounded disabled:bg-gray-500"
@@ -174,7 +184,7 @@ export default function MyInfoForm({ nickname, email }: MyInfoFormProps) {
           },
         }}
       />
-      {confettiVisible && <Confetti gravity={0.6} recycle={false} />}
+      {/* {confettiVisible && <Confetti gravity={0.6} recycle={false} />} */}
     </div>
   );
 }

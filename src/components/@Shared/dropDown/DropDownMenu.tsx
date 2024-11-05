@@ -1,9 +1,16 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import clsx from 'clsx';
+
+interface FilterList {
+  id: string | null;
+  text: string;
+}
 
 interface DropDownMenuProps {
-  size: string;
-  filterList: string[];
+  size?: string;
+  filterList: FilterList[];
+  setFilterStatus: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 /**
@@ -16,20 +23,25 @@ interface DropDownMenuProps {
  *
  * @param {Object} param0 - 컴포넌트에 전달되는 props
  * @param {'small' | 'large'} param0.size - 필터의 크기
- * @param {Array<string>} param0.filterList - 필터 항목의 배열
+ * @param {Array<string>} param1.filterList - 필터 항목의 배열
+ * @param {React.Dispatch<React.SetStateAction<string | null>>} param2.setFilterStatus - 필터 값
  * @returns {JSX.Element} 드롭다운 메뉴 컴포넌트
  */
 
-export default function DropDownMenu({ size, filterList }: DropDownMenuProps) {
+export default function DropDownMenu({
+  filterList,
+  setFilterStatus,
+}: DropDownMenuProps) {
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [filterText, setFilterText] = useState<string>('필터');
+  const [filterText, setFilterText] = useState<string>('전체');
 
   return (
-    <div className="relative bg-white">
+    <div className="relative bg-white z-10">
       <button
         type="button"
-        className={`flex justify-between items-center h-[53px] border-2 px-5 border-green-200 rounded-2xl bg-white`}
-        style={{ width: `${size === 'small' ? '127px' : '160px'}` }}
+        className={
+          'flex justify-between items-center w-[120px] sm:w-[140px] h-10 sm:h-[53px] text-[14px] sm:text-[16px] border-2 px-3 sm:px-5 border-green-200 rounded-2xl bg-white'
+        }
         onClick={() => {
           setIsActive(!isActive);
         }}
@@ -49,25 +61,22 @@ export default function DropDownMenu({ size, filterList }: DropDownMenuProps) {
         transition={{ duration: 0.3 }}
         className="absolute overflow-hidden mt-2"
       >
-        <ul
-          className="flex flex-col border-2 border-gray-300 rounded-md overflow-hidden"
-          style={{ width: `${size === 'small' ? '127px' : '160px'}` }}
-        >
+        <ul className="flex flex-col w-[120px] sm:w-[140px] border-2 border-gray-300 rounded-md overflow-hidden">
           {filterList.map((filter, index) => {
-            const lastList = index === filterList.length - 1;
+            const lastList = index === filterList.length - 1; // 마지막 index만 border 제외하기 위함
             return (
               <li
-                key={filter}
-                className={`flex justify-center items-center w-full bg-white hover:bg-gray-200 cursor-pointer  ${
+                key={filter.id}
+                className={`flex justify-center items-center w-full h-[45px] sm:h-[53px] text-sm sm:text-[16px] bg-white hover:bg-gray-200 cursor-pointer  ${
                   lastList || 'border-b-2 border-gray-300'
                 }`}
-                style={{ height: `${size === 'small' ? '53px' : '60px'}` }}
                 onClick={() => {
-                  setFilterText(filter);
+                  setFilterText(filter.text);
                   setIsActive(false);
+                  setFilterStatus(filter.id);
                 }}
               >
-                {filter}
+                {filter.text}
               </li>
             );
           })}
