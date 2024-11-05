@@ -1,16 +1,18 @@
 import { axiosInstance } from "@/apis/instance/axiosInstance";
 import { LoginFormData as LoginRequestData, UserData } from "@/components/auth/AuthDtos";
-import { createContext, ReactNode, useContext, useState } from "react"
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react"
 
 interface rootTypes {
   userData : UserData | undefined;
   refreshUser : () => void;
   useLogin : (data : LoginRequestData) => void;
+  setUserData: Dispatch<SetStateAction<UserData | undefined>>;
 }
 const rootContext = createContext<rootTypes>({
   userData : undefined,
   refreshUser : () => {},
   useLogin : () => {},
+  setUserData : ()=> {},
 });
 
 export const RootProvider : React.FC<{children: ReactNode}>= ({children})=> {
@@ -45,7 +47,7 @@ export const RootProvider : React.FC<{children: ReactNode}>= ({children})=> {
     // 에러 있을 시 error console에 띄움
   }
   return(
-    <rootContext.Provider value={{userData, useLogin, refreshUser}}>
+    <rootContext.Provider value={{userData, setUserData, useLogin, refreshUser}}>
       {children}
     </rootContext.Provider>
   )
