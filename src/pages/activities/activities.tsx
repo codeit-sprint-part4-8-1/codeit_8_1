@@ -135,12 +135,10 @@ const ExperienceForm = () => {
     }
   };
 
-  // 폼 제출 함수 수정
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      // 배너 이미지 업로드
       let bannerImageUrl = '';
       if (bannerImages.length > 0) {
         console.log('배너 이미지 업로드 시작');
@@ -153,13 +151,11 @@ const ExperienceForm = () => {
         console.log('배너 이미지 업로드 성공:', bannerImageUrl);
       }
 
-      // 소개 이미지 업로드
       console.log('소개 이미지 업로드 시작');
       const subImageUrls = await Promise.all(
         introImages.map((image) => uploadImage(image)),
       );
 
-      // null 값 필터링
       const validSubImageUrls = subImageUrls.filter((url) => url != null);
       console.log('유효한 소개 이미지 URL:', validSubImageUrls);
 
@@ -191,10 +187,8 @@ const ExperienceForm = () => {
       );
 
       console.log('폼 제출 성공:', response.data);
-      // 성공 처리 (예: 리디렉션이나 성공 메시지 표시)
     } catch (error) {
       console.error('폼 제출 실패:', error);
-      // 에러 처리 (예: 에러 메시지 표시)
     }
   };
 
@@ -238,8 +232,8 @@ const ExperienceForm = () => {
       <div className="mb-6">
         <label className="block text-lg font-semibold mb-2">가격</label>
         <input
-          type="number" // 입력 타입을 number로 설정
-          value={price === '' ? '' : price} // price가 ''일 경우 빈 문자열을 유지
+          type="number"
+          value={price === '' ? '' : price}
           onChange={handlePriceChange}
           className="w-full p-2 border border-gray-300 rounded"
           placeholder="가격을 입력하세요"
