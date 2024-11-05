@@ -13,6 +13,7 @@ export default function Document() {
       <body className="antialiased bg-gray-100">
         <Main />
         <NextScript />
+        <div id="modal-root"></div>
       </body>
     </Html>
   );
