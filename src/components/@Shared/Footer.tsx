@@ -8,7 +8,7 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = ({ className = '' }) => {
   return (
     <footer
-      className={`bg-nomadBlack text-gray-900 h-40 mt-10 flex flex-col items-center justify-center px-4 ${className}`}
+      className={`bg-nomadBlack text-gray-900 h-40 mt-[120px] flex flex-col items-center justify-center px-4 ${className}`}
     >
       <div className="w-full max-w-7xl flex flex-col tablet:flex-row justify-between items-center py-6">
         {/* 저작권 텍스트 */}
