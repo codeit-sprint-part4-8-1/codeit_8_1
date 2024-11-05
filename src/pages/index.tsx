@@ -1,6 +1,8 @@
 import Banner from '@/components/main/Banner';
 import SearchBar from '@/components/@Shared/searchBar/SearchBar';
 import HotActivityList from '@/components/mainPage/HotActivityList';
+import CategoryAndDropDown from '@/components/mainPage/Category&DropDown';
+import ActivityList from '@/components/mainPage/ActivityList';
 
 export default function Home() {
   return (
@@ -23,8 +25,11 @@ export default function Home() {
       <div className="relative mobile:mt-[100px] tablet2:mt-[142px] pc:mt-[158px] z-30 flex justify-center">
         <HotActivityList />
       </div>
-      <div className="text-center py-8">
-        <p>메인 페이지 내용</p>
+      <div className="relative mobile:mt-[40px] tablet2:mt-[60px] pc:mt-[60px] z-30 flex justify-center">
+        <CategoryAndDropDown />
+      </div>
+      <div className="relative flex justify-center mobile:mb-[83px] tablet2:mb-[153px] pc:mb-[222px]">
+        <ActivityList />
       </div>
     </div>
   );
