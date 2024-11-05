@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu } from '@headlessui/react';
 import Image from 'next/image';
 import LogoButton from './Buttons/LogoButton';
-
+import { useRoot } from '@/hook/useRoot';
 const GNB = () => {
   // 로그인 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { userData, setUserData } = useRoot();
 
+  useEffect(()=>{
+    if(userData) return setIsLoggedIn(true);
+    if(!userData) return setIsLoggedIn(false);
+  },[userData])
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -18,8 +23,10 @@ const GNB = () => {
             {/* 알림 버튼 */}
             <button className="text-gray-700 hover:text-blue-500">
               <Image
-                src="/Ico_notification.svg"
+                src="/ico/ico_notification.svg"
                 alt="종모양 아이콘(알림)"
+                width={10}
+                height={10}
                 className="w-6 h-6"
               />
             </button>
@@ -50,7 +57,11 @@ const GNB = () => {
                 <Menu.Item>
                   {({ active }) => (
                     <button
-                      onClick={() => setIsLoggedIn(false)} // 로그아웃 처리
+                      onClick={() => {
+                        setUserData(undefined)
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('refreshToken');
+                      } } // 로그아웃 처리
                       className={`block w-full text-left px-4 py-2 text-sm ${
                         active ? 'bg-gray-100' : ''
                       }`}
