@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ActivityCardProps } from '../../types/mainPage/ActivityCardTypes';
 
-const ActivityCard: React.FC<ActivityCardProps> = ({
+export const ActivityCard: React.FC<ActivityCardProps> = ({
   id,
   image,
   rating,
@@ -52,5 +52,3 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     </Link>
   );
 };
-
-export default ActivityCard;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ActivityCard from './ActivityCard';
-import { activities } from './ActivityListData';
+import axios from 'axios';
+import { ActivityCard } from './ActivityCard';
 
 interface Activity {
   id: number;
@@ -12,8 +12,12 @@ interface Activity {
 }
 
 export default function ActivityList() {
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6); // 기본값을 모바일에 맞게 설정
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalItems, setTotalItems] = useState<number>(0);
 
   // 화면 크기에 따라 표시할 카드 수를 결정
   const updateItemsPerPage = () => {
@@ -29,23 +33,74 @@ export default function ActivityList() {
     }
   };
 
+  // 화면 크기 변경 이벤트
   useEffect(() => {
     updateItemsPerPage();
     window.addEventListener('resize', updateItemsPerPage);
     return () => window.removeEventListener('resize', updateItemsPerPage);
   }, []);
 
-  // 페이지네이션 관련 계산
-  const totalItems = activities.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = activities.slice(indexOfFirstItem, indexOfLastItem);
+  // API에서 데이터 가져오기
+  useEffect(() => {
+    const fetchActivities = async () => {
+      const cursorId =
+        activities.length > 0 ? activities[activities.length - 1].id : 0; // 첫 요청 시 0, 이후에는 마지막 activity의 ID를 사용
+
+      try {
+        const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+        const apiUrl = `${BASE_URL}activities`; // 기본 URL
+
+        const params = {
+          method: 'offset', // 항상 'offset' 사용
+          cursorId: cursorId, // 첫 요청 시 0, 이후에는 실제 cursorId 값
+          page: currentPage, // 현재 페이지
+          size: itemsPerPage, // 한 페이지당 아이템 수
+        };
+
+        // API 요청
+        const response = await axios.get(apiUrl, { params });
+
+        // 응답 데이터 확인
+        console.log('API 응답:', response.data);
+
+        // 새로운 데이터를 기존 배열에 추가
+        setActivities((prevActivities) => [
+          ...prevActivities,
+          ...response.data.activities,
+        ]);
+        setTotalItems(response.data.total); // 총 항목 수 설정
+        setLoading(false);
+      } catch (err) {
+        setError('데이터를 가져오는 데 실패했습니다.');
+        console.error('API 요청 오류:', err);
+        setLoading(false);
+      }
+    };
+
+    fetchActivities();
+  }, [currentPage, itemsPerPage]);
+
+  // 페이지네이션 계산
+  const totalPages = totalItems > 0 ? Math.ceil(totalItems / itemsPerPage) : 0;
+
+  const currentItems = activities.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   // 페이지 변경 핸들러
   const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return; // 유효한 페이지 범위 체크
     setCurrentPage(page);
   };
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="container mx-auto">
