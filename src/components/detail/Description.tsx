@@ -1,0 +1,45 @@
+import { fetchActivityIdPreview } from '@/apis/detail/api';
+import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
+
+interface DescriptionPros {
+  activityId: number;
+}
+
+export default function Description({ activityId }: DescriptionPros) {
+  const { data: descriptionData } = useQuery({
+    queryKey: ['description'],
+    queryFn: async () => {
+      const res = await fetchActivityIdPreview({ activityId });
+      console.log(res);
+      return res;
+    },
+  });
+
+  return (
+    <div className="mt-20 py-10 border-t-2 border-b-2 border-gray-200">
+      <div className="pb-8 mb-8 border-b-2 border-gray-200">
+        <h2 className="text-xl font-bold mb-4">체험 설명</h2>
+        <p>{descriptionData?.description}</p>
+      </div>
+      {/* 지도 영역 임시로 이미지 적용 */}
+      <div>
+        <Image
+          src="/image/mapTestImage.png"
+          width={790}
+          height={450}
+          alt="지도 이미지"
+        />
+        <span className="flex items-center gap-2 mt-3">
+          <Image
+            src="/ico/ico_point.svg"
+            width={11}
+            height={16}
+            alt="주소 아이콘"
+          />
+          {descriptionData?.address}
+        </span>
+      </div>
+    </div>
+  );
+}
