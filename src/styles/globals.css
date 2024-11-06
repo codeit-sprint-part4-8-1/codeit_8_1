@@ -39,6 +39,10 @@ body {
     width: 0;
     height: 0;
   }
+
+  .skeleton-line-height {
+    line-height: inherit !important;
+  }
 }
 footer {
   position: relative; /* 푸터가 상대적으로 위치하게 함 */

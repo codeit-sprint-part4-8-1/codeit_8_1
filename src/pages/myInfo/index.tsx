@@ -1,41 +1,86 @@
-import { fetchLoginTest, fetchUserInfo } from '@/apis/myInfo/api';
 import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
 import MyInfoForm from '@/components/myInfo/MyInfoForm';
-import { UserInfo } from '@/types/myPage/type';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Suspense, useEffect } from 'react';
 import useUserInfo from '@/hook/useUserInfo';
+import LoadingSpinner from '@/components/@Shared/loading/LoadingSpinner';
+import MoContainer from '@/components/@Shared/MoContainer';
+import { useEffect, useState } from 'react';
+import ReservationList from '@/components/history/ReservationList';
+import { match } from 'ts-pattern';
 
-export default function MyInfo() {
+const MyInfoContent = () => {
   const { data, isLoading } = useUserInfo();
+  const [menuValue, setMenuValue] = useState<string>('내 정보');
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
-  // 로그인 기능구현전이어서 임시로 구현
-  const getLoginTest = async () => {
-    try {
-      const userData = await fetchLoginTest({
-        userEmail: 'youm96@naver.com',
-        userPassword: '12341234',
-      });
-    } catch (error) {
-      console.error('Login failed:', error);
+  useEffect(() => {
+    const windowResize = () => {
+      if (window.innerWidth > 767) {
+        setIsVisible(true);
+      }
+    };
+
+    windowResize();
+
+    window.addEventListener('resize', windowResize);
+
+    return () => {
+      window.removeEventListener('resize', windowResize);
+    };
+  }, []);
+
+  const handleMenuClick = (value: string) => {
+    setMenuValue(value);
+    if (window.innerWidth <= 767) {
+      setIsVisible(true);
     }
   };
 
-  useEffect(() => {
-    getLoginTest();
-  }, []);
-
   if (isLoading) {
-    return <div>로딩중...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
-    <ErrorBoundary fallback={<div>에러</div>}>
-      <div className="flex justify-center w-full gap-6 mt-20 mb-20">
-        <ProfileMenu profileImageUrl={data?.profileImageUrl} />
-        <MyInfoForm nickname={data?.nickname} email={data?.email} />
-      </div>
+    <div className="flex justify-center w-full gap-6 mt-10 sm:mt-20 mb-10 sm:mb-20">
+      <ProfileMenu
+        profileImageUrl={data?.profileImageUrl}
+        menuValue={menuValue}
+        onHandleMenuClick={handleMenuClick}
+        isVisible={isVisible}
+      />
+
+      {match(menuValue)
+        .with('내 정보', () => (
+          <MoContainer isVisible={isVisible}>
+            <MyInfoForm
+              nickname={data?.nickname}
+              email={data?.email}
+              setIsVisible={setIsVisible}
+            />
+          </MoContainer>
+        ))
+        .with('예약 내역', () => (
+          <MoContainer isVisible={isVisible}>
+            <ReservationList setIsVisible={setIsVisible} />
+          </MoContainer>
+        ))
+        .otherwise(() => (
+          <MoContainer isVisible={isVisible}>
+            <MyInfoForm
+              nickname={data?.nickname}
+              email={data?.email}
+              setIsVisible={setIsVisible}
+            />
+          </MoContainer>
+        ))}
+    </div>
+  );
+};
+
+export default function MyInfo() {
+  return (
+    <ErrorBoundary fallback={<div>에러가 발생했습니다.</div>}>
+      <MyInfoContent />
     </ErrorBoundary>
   );
 }
