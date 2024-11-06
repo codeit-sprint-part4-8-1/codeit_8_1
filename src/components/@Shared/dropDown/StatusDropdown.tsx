@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Activity {
   id: number;
@@ -11,17 +11,24 @@ interface List {
 
 interface StatusDropdownProps {
   list: List;
-  onSelect: (option: Activity) => void;
+  onSelect: (optionId: number) => void;
 }
 
 const StatusDropdown: React.FC<StatusDropdownProps> = ({ list, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(list.activities[0]);
+  const [selectedOption, setSelectedOption] = useState<Activity | null>(null);
+
+  useEffect(() => {
+    if (list.activities.length > 0) {
+      setSelectedOption(list.activities[0]);
+      onSelect(list.activities[0].id);
+    }
+  }, [list, onSelect]);
 
   const handleOptionClick = (option: Activity) => {
     setSelectedOption(option);
     setIsOpen(false);
-    onSelect(option);
+    onSelect(option.id);
   };
 
   return (
@@ -33,7 +40,7 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({ list, onSelect }) => {
         className="w-full border border-gray-900 rounded h-14 flex items-center justify-between px-3 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span>{selectedOption.title}</span>
+        <span>{selectedOption ? selectedOption.title : '선택해주세요'}</span>
         <svg
           className={`w-4 h-4 transition-transform ${
             isOpen ? 'rotate-180' : ''
@@ -56,7 +63,7 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({ list, onSelect }) => {
           {list.activities.map((activity) => (
             <li
               key={activity.id}
-              className="px-4 py-2 hover:bg-gnGray100 cursor-pointer"
+              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => handleOptionClick(activity)}
             >
               {activity.title}
