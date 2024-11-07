@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Banner from '@/components/main/Banner';
 import SearchBar from '@/components/@Shared/searchBar/SearchBar';
 import HotActivityList from '@/components/mainPage/HotActivityList';
@@ -5,6 +6,8 @@ import CategoryAndDropDown from '@/components/mainPage/Category&DropDown';
 import ActivityList from '@/components/mainPage/ActivityList';
 
 export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   return (
     <div className="relative w-full">
       {/* <div className="h-240 md:h-550 bg-gray-800 flex items-center justify-center">
@@ -26,10 +29,12 @@ export default function Home() {
         <HotActivityList />
       </div>
       <div className="relative mobile:mt-[40px] tablet2:mt-[60px] pc:mt-[60px] z-30 flex justify-center">
-        <CategoryAndDropDown />
+        {/* 카테고리 선택 컴포넌트에 선택된 카테고리 상태 전달 */}
+        <CategoryAndDropDown setSelectedCategory={setSelectedCategory} />
       </div>
       <div className="relative flex justify-center mobile:mb-[83px] tablet2:mb-[153px] pc:mb-[222px]">
-        <ActivityList />
+        {/* 선택된 카테고리에 맞춰 필터링된 체험 목록을 전달 */}
+        <ActivityList selectedCategory={selectedCategory} />
       </div>
     </div>
   );

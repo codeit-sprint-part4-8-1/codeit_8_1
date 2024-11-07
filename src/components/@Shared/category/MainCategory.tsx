@@ -1,7 +1,14 @@
 import { useState } from 'react';
 
-export default function MainCategory() {
+interface MainCategoryProps {
+  setSelectedCategory: (category: string | null) => void;
+}
+
+export default function MainCategory({
+  setSelectedCategory,
+}: MainCategoryProps) {
   const CATEGORY_LIST = [
+    '전체',
     '문화・예술',
     '식음료',
     '스포츠',
@@ -10,6 +17,21 @@ export default function MainCategory() {
     '웰빙',
   ];
   const [isActive, setIsActive] = useState<string>('');
+
+  const handleCategoryClick = (category: string) => {
+    if (category === '전체') {
+      setSelectedCategory(null); // "전체" 클릭 시 카테고리 필터링 해제
+      setIsActive(''); // 버튼 상태 초기화
+    } else {
+      if (isActive === category) {
+        setIsActive(''); // 이미 선택된 카테고리를 다시 클릭하면 해제
+        setSelectedCategory(null); // 카테고리 해제
+      } else {
+        setIsActive(category); // 카테고리 선택
+        setSelectedCategory(category); // 선택된 카테고리 상태 전달
+      }
+    }
+  };
 
   return (
     <div className="relative w-full overflow-x-auto md:overflow-visible">
@@ -24,13 +46,7 @@ export default function MainCategory() {
                   ? 'text-white bg-nomadBlack'
                   : 'text-nomadBlack bg-white'
               }`}
-              onClick={() => {
-                if (isActive === category) {
-                  setIsActive('');
-                } else {
-                  setIsActive(category);
-                }
-              }}
+              onClick={() => handleCategoryClick(category)}
             >
               {category}
             </button>

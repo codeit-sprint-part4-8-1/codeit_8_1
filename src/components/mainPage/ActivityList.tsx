@@ -11,13 +11,17 @@ interface Activity {
   reviews: number;
 }
 
-export default function ActivityList() {
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(6); // 기본값을 모바일에 맞게 설정
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [totalItems, setTotalItems] = useState<number>(0);
+interface ActivityListProps {
+  selectedCategory: string | null;
+}
+
+export default function ActivityList({ selectedCategory }: ActivityListProps) {
+  const [activities, setActivities] = useState<Activity[]>([]); // 체험 데이터 상태
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
+  const [itemsPerPage, setItemsPerPage] = useState(6); // 한 페이지 당 아이템 수
+  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태
+  const [error, setError] = useState<string | null>(null); // 에러 상태
+  const [totalItems, setTotalItems] = useState<number>(0); // 총 아이템 수
 
   // 화면 크기에 따라 표시할 카드 수를 결정
   const updateItemsPerPage = () => {
@@ -40,22 +44,35 @@ export default function ActivityList() {
     return () => window.removeEventListener('resize', updateItemsPerPage);
   }, []);
 
-  // API에서 데이터 가져오기
+  // 카테고리 변경 시만 새로운 데이터 요청
   useEffect(() => {
+    setActivities([]); // 카테고리 변경 시 활동 리스트 초기화
+    setCurrentPage(1); // 페이지 초기화
+  }, [selectedCategory]);
+
+  // 페이지나 카테고리가 변경될 때마다 fetchActivities 호출
+  useEffect(() => {
+    // 데이터 가져오기
     const fetchActivities = async () => {
-      const cursorId =
-        activities.length > 0 ? activities[activities.length - 1].id : 0; // 첫 요청 시 0, 이후에는 마지막 activity의 ID를 사용
+      // 상태 초기화
+      setLoading(true); // 로딩 상태 시작
+      setError(null); // 에러 초기화
 
       try {
         const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
         const apiUrl = `${BASE_URL}activities`; // 기본 URL
 
-        const params = {
+        // 카테고리와 페이지에 맞는 API 요청 파라미터
+        const params: any = {
           method: 'offset', // 항상 'offset' 사용
-          cursorId: cursorId, // 첫 요청 시 0, 이후에는 실제 cursorId 값
           page: currentPage, // 현재 페이지
           size: itemsPerPage, // 한 페이지당 아이템 수
         };
+
+        // 카테고리가 선택되어 있으면 필터링
+        if (selectedCategory) {
+          params.category = selectedCategory;
+        }
 
         // API 요청
         const response = await axios.get(apiUrl, { params });
@@ -63,12 +80,9 @@ export default function ActivityList() {
         // 응답 데이터 확인
         console.log('API 응답:', response.data);
 
-        // 새로운 데이터를 기존 배열에 추가
-        setActivities((prevActivities) => [
-          ...prevActivities,
-          ...response.data.activities,
-        ]);
-        setTotalItems(response.data.total); // 총 항목 수 설정
+        // 데이터를 새로 덮어쓰지 않고 기존 데이터에 추가
+        setActivities(response.data.activities);
+        setTotalItems(response.data.totalCount); // 총 아이템 수 업데이트
         setLoading(false);
       } catch (err) {
         setError('데이터를 가져오는 데 실패했습니다.');
@@ -77,22 +91,17 @@ export default function ActivityList() {
       }
     };
 
-    fetchActivities();
-  }, [currentPage, itemsPerPage]);
+    fetchActivities(); // 데이터 다시 불러오기
+  }, [selectedCategory, currentPage, itemsPerPage]);
+
+  // 페이지 변경 시 새 데이터를 가져오는 함수
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > Math.ceil(totalItems / itemsPerPage)) return; // 유효한 페이지 범위 체크
+    setCurrentPage(page); // 페이지 변경
+  };
 
   // 페이지네이션 계산
   const totalPages = totalItems > 0 ? Math.ceil(totalItems / itemsPerPage) : 0;
-
-  const currentItems = activities.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
-
-  // 페이지 변경 핸들러
-  const handlePageChange = (page: number) => {
-    if (page < 1 || page > totalPages) return; // 유효한 페이지 범위 체크
-    setCurrentPage(page);
-  };
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -109,7 +118,7 @@ export default function ActivityList() {
       </h2>
       {/* 카드 목록 */}
       <div className="grid gap-4 px-4 sm:px-8 lg:px-0 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-        {currentItems.map((activity) => (
+        {activities.map((activity) => (
           <ActivityCard
             key={activity.id}
             id={activity.id}
@@ -123,33 +132,44 @@ export default function ActivityList() {
       </div>
 
       {/* 페이지네이션 */}
-      <div className="flex justify-center text-black mt-8 space-x-1">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-3 py-1 border rounded-l-lg"
-        >
-          이전
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
+      {totalPages > 0 && (
+        <div className="flex justify-center text-green-200 mt-8 space-x-1">
+          {/* 이전 버튼 */}
           <button
-            key={i + 1}
-            onClick={() => handlePageChange(i + 1)}
-            className={`px-3 py-1 border ${
-              currentPage === i + 1 ? 'bg-blue-500 text-white' : ''
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-3 py-1 border border-green-200 disabled:border-gray-400 disabled:text-gray-400 rounded-[15px] mobile:w-[40px] mobile:h-[40px] tablet2:w-[55px] tablet2:h-[55px] pc:w-[55px] pc:h-[55px] ${
+              currentPage === 1 ? 'text-gray-400' : 'text-green-200'
             }`}
           >
-            {i + 1}
+            ◀
           </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 border rounded-r-lg"
-        >
-          다음
-        </button>
-      </div>
+
+          {/* 페이지 번호 버튼들 */}
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => handlePageChange(i + 1)}
+              className={`px-3 py-1 border border-green-200 rounded-[15px] mobile:w-[40px] mobile:h-[40px] tablet2:w-[55px] tablet2:h-[55px] pc:w-[55px] pc:h-[55px] ${
+                currentPage === i + 1 ? 'bg-black text-white' : ''
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          {/* 다음 버튼 */}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-3 py-1 border border-green-200 disabled:border-gray-400 disabled:text-gray-400 rounded-[15px] mobile:w-[40px] mobile:h-[40px] tablet2:w-[55px] tablet2:h-[55px] pc:w-[55px] pc:h-[55px] ${
+              currentPage === totalPages ? 'text-gray-400' : 'text-green-200'
+            }`}
+          >
+            ▶
+          </button>
+        </div>
+      )}
     </div>
   );
 }
