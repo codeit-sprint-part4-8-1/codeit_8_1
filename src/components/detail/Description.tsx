@@ -1,26 +1,27 @@
 import { fetchActivityIdPreview } from '@/apis/detail/api';
+import { Detail } from '@/types/detailPage/type';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
 interface DescriptionPros {
-  activityId: number;
+  detailData: Detail;
 }
 
-export default function Description({ activityId }: DescriptionPros) {
-  const { data: descriptionData } = useQuery({
-    queryKey: ['description'],
-    queryFn: async () => {
-      const res = await fetchActivityIdPreview({ activityId });
-      console.log(res);
-      return res;
-    },
-  });
+export default function Description({ detailData }: DescriptionPros) {
+  // const { data: descriptionData } = useQuery({
+  //   queryKey: ['description'],
+  //   queryFn: async () => {
+  //     const res = await fetchActivityIdPreview({ activityId });
+  //     console.log(res);
+  //     return res;
+  //   },
+  // });
 
   return (
     <div className="mt-20 py-10 border-t-2 border-b-2 border-gray-200">
       <div className="pb-8 mb-8 border-b-2 border-gray-200">
         <h2 className="text-xl font-bold mb-4">체험 설명</h2>
-        <p>{descriptionData?.description}</p>
+        <p>{detailData?.description}</p>
       </div>
       {/* 지도 영역 임시로 이미지 적용 */}
       <div>
@@ -37,7 +38,7 @@ export default function Description({ activityId }: DescriptionPros) {
             height={16}
             alt="주소 아이콘"
           />
-          {descriptionData?.address}
+          {detailData?.address}
         </span>
       </div>
     </div>
