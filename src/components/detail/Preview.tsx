@@ -31,7 +31,9 @@ export default function Preview({ detailData }: PreviewProps) {
     try {
       const res = await deleteActivityId({ activityId });
       toast.success('체험이 삭제 되었습니다.');
-      router.push('/');
+      setTimeout(() => {
+        router.push('/');
+      }, 1500);
     } catch (error: any) {
       const message =
         error.response?.data?.message || '체험 삭제를 실패했습니다.';
