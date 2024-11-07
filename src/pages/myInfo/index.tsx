@@ -7,6 +7,7 @@ import MoContainer from '@/components/@Shared/MoContainer';
 import { useEffect, useState } from 'react';
 import ReservationList from '@/components/history/ReservationList';
 import { match } from 'ts-pattern';
+import ReservationStatus from '../status';
 
 const MyInfoContent = () => {
   const { data, isLoading } = useUserInfo();
@@ -62,6 +63,11 @@ const MyInfoContent = () => {
         .with('예약 내역', () => (
           <MoContainer isVisible={isVisible}>
             <ReservationList setIsVisible={setIsVisible} />
+          </MoContainer>
+        ))
+        .with('예약 현황', () => (
+          <MoContainer isVisible={isVisible}>
+            <ReservationStatus setIsVisible={setIsVisible} />
           </MoContainer>
         ))
         .otherwise(() => (
