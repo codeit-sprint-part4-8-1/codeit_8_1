@@ -116,7 +116,7 @@ const ExperienceForm = () => {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwODA1NTA3LCJleHAiOjE3MzA4MDczMDcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.4_MDgAToctKizdY-f956icNc7monG9vEglGX2Gv4UV4`,
           },
           withCredentials: false,
         },
@@ -181,7 +181,7 @@ const ExperienceForm = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwODA1NTA3LCJleHAiOjE3MzA4MDczMDcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.4_MDgAToctKizdY-f956icNc7monG9vEglGX2Gv4UV4`,
           },
         },
       );
@@ -189,6 +189,7 @@ const ExperienceForm = () => {
       console.log('폼 제출 성공:', response.data);
     } catch (error) {
       console.error('폼 제출 실패:', error);
+      // 에러 처리 (예: 에러 메시지 표시)
     }
   };
 
