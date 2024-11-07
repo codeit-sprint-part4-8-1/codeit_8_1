@@ -114,7 +114,7 @@ export default function ActivityList({ selectedCategory }: ActivityListProps) {
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl text-black text-left font-semibold mb-4">
-        🛼 모든 체험
+        {selectedCategory ? `${selectedCategory}` : '🛼 모든 체험'}
       </h2>
       {/* 카드 목록 */}
       <div className="grid gap-4 px-4 sm:px-8 lg:px-0 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
