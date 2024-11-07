@@ -1,28 +1,5 @@
-import { AxiosResponse } from 'axios';
 import { axiosInstance } from '../instance/axiosInstance';
 import { Review } from '@/types/myPage/type';
-
-interface fetchLoginTestParams {
-  userEmail: string;
-  userPassword: string;
-}
-
-// 로그인 기능구현전이어서 임시로 구현
-export const fetchLoginTest = async ({
-  userEmail = 'youm96@naver.com',
-  userPassword = '12341234',
-}: fetchLoginTestParams) => {
-  try {
-    const response = await axiosInstance.post('auth/login', {
-      email: userEmail,
-      password: userPassword,
-    });
-    localStorage.setItem('accessToken', JSON.stringify(response.data));
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 // 유저 정보 가져오기
 export const fetchUserInfo = async () => {
@@ -76,15 +53,18 @@ export const updateUserInfo = async (
 export const fetchReservationList = async ({
   cursorId,
   size,
+  status,
 }: {
   cursorId?: number;
   size: number;
+  status?: string | null;
 }) => {
   try {
     const response = await axiosInstance.get('/my-reservations', {
       params: {
         cursorId: cursorId ?? null,
         size,
+        status,
       },
     });
     return response.data;

@@ -48,7 +48,7 @@ export default function ActivityList() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto">
       <h2 className="text-2xl text-black text-left font-semibold mb-4">
         🛼 모든 체험
       </h2>

@@ -36,7 +36,7 @@ export default function ModalFrame({
 
   return (
     <div
-      className={`relative z-10 ${
+      className={`relative z-50 ${
         isOpen ? 'animate-modalFadeIn' : 'animate-modalFadeOut'
       }`}
     >

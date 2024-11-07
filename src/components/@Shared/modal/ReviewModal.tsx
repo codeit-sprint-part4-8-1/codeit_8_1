@@ -72,7 +72,7 @@ export default function ReviewModal({ setIsOpen, resData }: ReviewModalProps) {
   };
 
   return (
-    <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[480px] p-6 pb-10 bg-white rounded-xl z-10">
+    <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95%] sm:w-full max-w-[480px] p-4 sm:p-6 pb-10 bg-white rounded-xl z-50  overflow-y-auto max-h-[95vh]">
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-2xl font-bold">후기 작성</h2>
         <button
@@ -89,24 +89,26 @@ export default function ReviewModal({ setIsOpen, resData }: ReviewModalProps) {
           />
         </button>
       </div>
-      <div className="flex justify-between items-center gap-6 mb-12">
+      <div className="flex justify-between items-center gap-2 sm:gap-6 mb-8 sm:mb-12">
         <div
-          className="w-32 h-32 rounded-3xl bg-cover bg-center bg-no-repeat flex-shrink-0 text-[0px]"
+          className="w-24 h-24 sm:w-32 sm:h-32 rounded-3xl bg-cover bg-center bg-no-repeat flex-shrink-0 text-[0px]"
           style={{ backgroundImage: `url(${resData.activity.bannerImageUrl})` }}
         >
           이미지 영역
         </div>
         <div>
-          <h3 className="text-xl font-bold mb-3">{resData.activity.title}</h3>
-          <span className="block text-lg mb-6">
+          <h3 className="text-[16px] sm:text-xl font-bold mb-3">
+            {resData.activity.title}
+          </h3>
+          <span className="block text-sm sm:text-lg mb-4 sm:mb-6 break-keep">
             {resData.date} ・ {resData.startTime} - {resData.endTime} ・
             {resData.headCount}명
           </span>
-          <span className="text-2xl font-bold">₩10,000</span>
+          <span className="text-xl md:text-2xl font-bold">₩10,000</span>
         </div>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex justify-center items-center gap-2 h-[56px] mb-12">
+        <div className="flex justify-center items-center gap-2 h-[56px] mb-8 sm:mb-12">
           {STAR_LIST.map((star) => {
             const isActive = rating >= star.id;
             return (
@@ -141,7 +143,7 @@ export default function ReviewModal({ setIsOpen, resData }: ReviewModalProps) {
         <Button
           label="작성하기"
           variant="solid"
-          className="w-full h-[56px] text-base disabled:bg-gray-500"
+          className="w-full h-[50px] sm:h-[56px] text-base disabled:bg-gray-500"
           type="submit"
           disabled={!isValid || rating === 0}
         />

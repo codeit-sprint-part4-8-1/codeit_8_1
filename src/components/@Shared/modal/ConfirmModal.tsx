@@ -28,7 +28,7 @@ export default function ConfirmModal({
   };
 
   return (
-    <div className="flex flex-col justify-center items-center fixed p-6 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[300px] h-[180px] bg-white rounded-xl z-10">
+    <div className="flex flex-col justify-center items-center fixed p-6 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[95%] sm:w-full max-w-[300px] h-[180px] bg-white rounded-xl z-50">
       <div>
         <Image
           src="/ico/ico_check.svg"
