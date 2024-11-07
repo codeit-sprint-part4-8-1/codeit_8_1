@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
@@ -18,58 +19,57 @@ interface APIResponse {
   nextCursor?: number;
 }
 
-interface AvailableTime {
-  date: string;
-  startTime: string;
-  endTime: string;
-}
+const API_BASE_URL = 'https://sp-globalnomad-api.vercel.app/8-1';
 
-const handleDelete = async (experienceId: number) => {
-  if (!window.confirm('정말로 이 체험을 삭제하시겠습니까?')) {
-    return;
+const api = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
+  return config;
+});
 
-  try {
-    await axios.delete(
-      `https://sp-globalnomad-api.vercel.app/8-1/my-activities/${experienceId}`,
-      {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
-        },
-      },
-    );
+const ExperienceManagement = () => {
+  const router = useRouter();
 
-    refetch();
-  } catch (error) {
-    console.error('체험 삭제 실패:', error);
-  }
-};
+  const handleEdit = async (experienceId: number) => {
+    try {
+      const response = await api.get(`/activities/${experienceId}`);
+      localStorage.setItem('selectedExperience', JSON.stringify(response.data));
+      router.push(`/activities/edit/${experienceId}`);
+    } catch (error) {
+      console.error('체험 정보 불러오기 실패:', error);
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        router.push('/login');
+      }
+    }
+  };
 
-const ExperienceForm = () => {
-  const [availableTimes, setAvailableTimes] = useState<AvailableTime[]>([
-    { date: '', startTime: '', endTime: '' },
-  ]);
+  const handleDelete = async (experienceId: number) => {
+    if (!window.confirm('정말로 이 체험을 삭제하시겠습니까?')) {
+      return;
+    }
 
-  const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState<number | ''>('');
-  const [address, setAddress] = useState('');
-  const [bannerImages, setBannerImages] = useState<File[]>([]);
-  const [introImages, setIntroImages] = useState<File[]>([]);
+    try {
+      await api.delete(`/my-activities/${experienceId}`);
+      refetch();
+    } catch (error) {
+      console.error('체험 삭제 실패:', error);
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        router.push('/login');
+      }
+    }
+  };
 
-  // Intersection Observer 설정
   const { ref, inView } = useInView();
 
-  // 경험 목록을 가져오는 함수
   const fetchExperiencePage = async ({ pageParam = 0 }) => {
-    const response = await axios.get<APIResponse>(
-      `https://sp-globalnomad-api.vercel.app/8-1/my-activities?cursor=${pageParam}`,
-      {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
-        },
-      },
+    const response = await api.get<APIResponse>(
+      `/my-activities?cursor=${pageParam}`,
     );
     return response.data;
   };
@@ -88,89 +88,19 @@ const ExperienceForm = () => {
     initialPageParam: 0,
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  const uploadImage = async (image: File) => {
-    const formData = new FormData();
-    formData.append('image', image);
-
-    try {
-      const response = await axios.post(
-        'https://sp-globalnomad-api.vercel.app/8-1/activities/image',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
-          },
-        },
-      );
-
-      if (!response.data.activityImageUrl) {
-        console.error('이미지 URL이 응답에 없음:', response.data);
-        return null;
-      }
-      return response.data.activityImageUrl;
-    } catch (error) {
-      console.error('이미지 업로드 실패:', error);
-      return null;
+  // 로그인 상태 확인
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      let bannerImageUrl = '';
-      if (bannerImages.length > 0) {
-        const uploadedBannerUrl = await uploadImage(bannerImages[0]);
-        if (!uploadedBannerUrl) {
-          console.error('배너 이미지 업로드 실패');
-          return;
-        }
-        bannerImageUrl = uploadedBannerUrl;
-      }
-
-      const subImageUrls = await Promise.all(
-        introImages.map((image) => uploadImage(image)),
-      );
-
-      const validSubImageUrls = subImageUrls.filter((url) => url != null);
-
-      const formData = {
-        title,
-        category,
-        description,
-        address,
-        price: Number(price),
-        schedules: availableTimes.map(({ date, startTime, endTime }) => ({
-          date,
-          startTime,
-          endTime,
-        })),
-        bannerImageUrl,
-        subImageUrls: validSubImageUrls,
-      };
-
-      await axios.post(
-        'https://sp-globalnomad-api.vercel.app/8-1/activities',
-        formData,
-        {
-          headers: {
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
-          },
-        },
-      );
-
-      refetch();
-    } catch (error) {
-      console.error('경험 등록 실패:', error);
-    }
-  };
+  }, [router]);
 
   return (
     <div className="container mx-auto w-[800px] p-4">
@@ -178,6 +108,7 @@ const ExperienceForm = () => {
         <h2 className="text-2xl font-bold">내 체험 관리</h2>
         <button
           type="button"
+          onClick={() => router.push('/activities/activities')}
           className="w-[120px] p-2 bg-black text-white rounded font-medium hover:opacity-90 transition-opacity"
         >
           체험 등록하기
@@ -227,12 +158,19 @@ const ExperienceForm = () => {
                       {experience.price?.toLocaleString() || '0'}원
                     </span>
                   </div>
-                  <div
-                    className="flex items-end cursor-pointer text-red-600 focus:text-red-600"
-                    onClick={() => handleDelete(experience.id)}
-                  >
-                    <div />
-                    <span>삭제하기</span>
+                  <div className="flex items-center gap-4 mt-2">
+                    <button
+                      onClick={() => handleEdit(experience.id)}
+                      className="text-blue-600 hover:text-blue-800 focus:text-blue-800"
+                    >
+                      수정하기
+                    </button>
+                    <button
+                      onClick={() => handleDelete(experience.id)}
+                      className="text-red-600 hover:text-red-800 focus:text-red-800"
+                    >
+                      삭제하기
+                    </button>
                   </div>
                 </div>
               </div>
@@ -256,4 +194,4 @@ const ExperienceForm = () => {
   );
 };
 
-export default ExperienceForm;
+export default ExperienceManagement;
