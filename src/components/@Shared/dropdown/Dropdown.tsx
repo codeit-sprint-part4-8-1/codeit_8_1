@@ -3,13 +3,20 @@ import { HiChevronDown } from 'react-icons/hi';
 
 const categories = ['문화 예술', '식음료', '스포츠', '투어', '관광'];
 
-const Dropdown = () => {
+interface DropdownProps {
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+}
+
+const Dropdown: React.FC<DropdownProps> = ({
+  selectedCategory,
+  onCategoryChange,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
   const selectCategory = (category: string) => {
-    setSelectedCategory(category);
+    onCategoryChange(category);
     setIsOpen(false);
   };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Category from '@/components/@Shared/dropDown/Dropdown';
+import Category from '@/components/@Shared/dropdown/Dropdown';
+import axios from 'axios';
 
 const ExperienceForm = () => {
   const [availableTimes, setAvailableTimes] = useState([
@@ -9,13 +10,16 @@ const ExperienceForm = () => {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState<number | ''>('');
   const [address, setAddress] = useState('');
   const [postcode, setPostcode] = useState('');
   const [bannerImages, setBannerImages] = useState<File[]>([]);
   const [introImages, setIntroImages] = useState<File[]>([]);
 
-  // 예약 가능한 시간대 추가
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPrice(e.target.value ? Number(e.target.value) : '');
+  };
+
   const addAvailableTime = () => {
     setAvailableTimes([
       ...availableTimes,
@@ -23,33 +27,28 @@ const ExperienceForm = () => {
     ]);
   };
 
-  // 예약 가능한 시간대 삭제
   const removeAvailableTime = (index: number) => {
     const updatedTimes = [...availableTimes];
     updatedTimes.splice(index, 1);
     setAvailableTimes(updatedTimes);
   };
 
-  // 시간대 변경
   const handleTimeChange = (index: number, field: string, value: string) => {
     const updatedTimes = [...availableTimes];
     updatedTimes[index] = { ...updatedTimes[index], [field]: value };
     setAvailableTimes(updatedTimes);
   };
 
-  // 배너 이미지 업로드
   const handleBannerImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setBannerImages([e.target.files[0]]);
     }
   };
 
-  // 배너 이미지 삭제
   const removeBannerImage = () => {
     setBannerImages([]);
   };
 
-  // 소개 이미지 업로드
   const handleIntroImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newImages = Array.from(e.target.files);
@@ -61,7 +60,6 @@ const ExperienceForm = () => {
     }
   };
 
-  // 소개 이미지 삭제
   const removeIntroImage = (index: number) => {
     const updatedImages = [...introImages];
     updatedImages.splice(index, 1);
@@ -69,7 +67,6 @@ const ExperienceForm = () => {
   };
 
   useEffect(() => {
-    // Daum 우편번호 스크립트 동적추가
     const script = document.createElement('script');
     script.src =
       '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
@@ -106,9 +103,93 @@ const ExperienceForm = () => {
     }).open();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 이미지 업로드 함수 수정
+  const uploadImage = async (image: File) => {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    try {
+      console.log('이미지 업로드 시작:', image.name);
+      const response = await axios.post(
+        'https://sp-globalnomad-api.vercel.app/8-1/activities/image',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
+          },
+          withCredentials: false,
+        },
+      );
+      console.log('이미지 업로드 응답:', response.data);
+
+      if (!response.data.activityImageUrl) {
+        console.error('이미지 URL이 응답에 없음:', response.data);
+        return null;
+      }
+
+      return response.data.activityImageUrl;
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ title, category, description, price, address, postcode });
+
+    try {
+      let bannerImageUrl = '';
+      if (bannerImages.length > 0) {
+        console.log('배너 이미지 업로드 시작');
+        const uploadedBannerUrl = await uploadImage(bannerImages[0]);
+        if (!uploadedBannerUrl) {
+          console.error('배너 이미지 업로드 실패');
+          return;
+        }
+        bannerImageUrl = uploadedBannerUrl;
+        console.log('배너 이미지 업로드 성공:', bannerImageUrl);
+      }
+
+      console.log('소개 이미지 업로드 시작');
+      const subImageUrls = await Promise.all(
+        introImages.map((image) => uploadImage(image)),
+      );
+
+      const validSubImageUrls = subImageUrls.filter((url) => url != null);
+      console.log('유효한 소개 이미지 URL:', validSubImageUrls);
+
+      const formData = {
+        title,
+        category,
+        description,
+        address,
+        price: Number(price),
+        schedules: availableTimes.map(({ date, startTime, endTime }) => ({
+          date,
+          startTime,
+          endTime,
+        })),
+        bannerImageUrl,
+        subImageUrls: validSubImageUrls,
+      };
+
+      console.log('제출할 폼 데이터:', formData);
+
+      const response = await axios.post(
+        'https://sp-globalnomad-api.vercel.app/8-1/activities',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwNzg0Mzk3LCJleHAiOjE3MzA3ODYxOTcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.qrHpa59w1Ly3dOhcAp8K8D3dp-a_y-XGlZouLfItfPU`,
+          },
+        },
+      );
+
+      console.log('폼 제출 성공:', response.data);
+    } catch (error) {
+      console.error('폼 제출 실패:', error);
+    }
   };
 
   return (
@@ -135,7 +216,7 @@ const ExperienceForm = () => {
 
       <div className="mb-6">
         <label className="block text-lg font-semibold mb-2">카테고리</label>
-        <Category></Category>
+        <Category selectedCategory={category} onCategoryChange={setCategory} />
       </div>
 
       <div className="mb-6">
@@ -151,9 +232,9 @@ const ExperienceForm = () => {
       <div className="mb-6">
         <label className="block text-lg font-semibold mb-2">가격</label>
         <input
-          type="text"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          type="number"
+          value={price === '' ? '' : price}
+          onChange={handlePriceChange}
           className="w-full p-2 border border-gray-300 rounded"
           placeholder="가격을 입력하세요"
         />
