@@ -8,17 +8,8 @@ interface DescriptionPros {
 }
 
 export default function Description({ detailData }: DescriptionPros) {
-  // const { data: descriptionData } = useQuery({
-  //   queryKey: ['description'],
-  //   queryFn: async () => {
-  //     const res = await fetchActivityIdPreview({ activityId });
-  //     console.log(res);
-  //     return res;
-  //   },
-  // });
-
   return (
-    <div className="mt-20 py-10 border-t-2 border-b-2 border-gray-200">
+    <div className="py-10 border-t-2 border-b-2 border-gray-200">
       <div className="pb-8 mb-8 border-b-2 border-gray-200">
         <h2 className="text-xl font-bold mb-4">체험 설명</h2>
         <p>{detailData?.description}</p>
