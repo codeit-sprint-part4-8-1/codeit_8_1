@@ -3,16 +3,15 @@ import StatusCalendar from '@/components/status/StatusCalendar';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import ReservationStatusSkeleton from '@/components/status/ReservationStatusSkeleton';
-import ProfileMenu from '@/components/@Shared/profileMenu/ProfileMenu';
-import useUserInfo from '@/hook/useUserInfo';
 import StatusDropdown from '@/components/@Shared/dropDown/StatusDropdown';
 
-const ReservationStatus = () => {
-  const { data: userInfo, isLoading: isUserInfoLoading } = useUserInfo();
+interface ReservationListProps {
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ReservationStatus = ({ setIsVisible }: ReservationListProps) => {
   const { data: list, isLoading: isActivitiesLoading } = useMyActivitiesCheck();
   const [selectedActivityId, setSelectedActivityId] = useState<number>();
-  const [menuValue, setMenuValue] = useState<string>('내 정보');
-  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (list && list.data.activities.length > 0) {
@@ -26,26 +25,12 @@ const ReservationStatus = () => {
     return activityId;
   };
 
-  const handleMenuClick = (value: string) => {
-    setMenuValue(value);
-    if (window.innerWidth <= 767) {
-      setIsVisible(true);
-    }
-  };
-
-  if (isUserInfoLoading || isActivitiesLoading)
-    return <ReservationStatusSkeleton />;
+  if (isActivitiesLoading) return <ReservationStatusSkeleton />;
 
   return (
     <>
-      <div className="flex mt-20">
-        <ProfileMenu
-          profileImageUrl={userInfo?.profileImageUrl}
-          menuValue={menuValue}
-          onHandleMenuClick={handleMenuClick}
-          isVisible={isVisible}
-        />
-        <div className="flex w-[792px] flex-col gap-[30px] ml-6 mb-20">
+      <div className="flex">
+        <div className="flex w-full shrink-1 basis-[120%] flex-col gap-[30px] mb-20">
           {list && list.data.activities.length > 0 ? (
             <div className="flex flex-col gap-12">
               <div className="flex w-full flex-col gap-[32px]">
