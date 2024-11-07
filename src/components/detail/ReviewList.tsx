@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import LoadingSpinner from '../@Shared/loading/LoadingSpinner';
 import { useState } from 'react';
+import { match } from 'ts-pattern';
 
 interface ReviewListProps {
   activityId: number;
@@ -33,8 +34,18 @@ export default function ReviewList({ activityId }: ReviewListProps) {
     return <LoadingSpinner />;
   }
 
+  if (!totalPages) {
+    return (
+      <div className="text-center mt-6">
+        <h3 className="text-2xl font-bold text-gray-700">
+          작성된 후기가 없습니다.
+        </h3>
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="mt-10">
       <h2 className="text-lg font-bold mb-6">후기</h2>
       <div className="flex items-center gap-4 mb-6">
         <h3 className="text-5xl font-bold">{resultRating}</h3>
@@ -93,7 +104,6 @@ export default function ReviewList({ activityId }: ReviewListProps) {
           );
         })}
       </div>
-
       <div className="flex items-center justify-center gap-3">
         <button
           type="button"
