@@ -8,7 +8,7 @@ interface ContainerProps {
 export default function Container({
   children,
   fullWidth = false,
-}: Props) {
+}: ContainerProps) {
   return (
     <div
       className={fullWidth ? 'w-full' : 'w-full max-w-screen-xl mx-auto px-4'}
