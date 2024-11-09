@@ -5,6 +5,10 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { HiDotsVertical } from 'react-icons/hi';
 
+interface ExperienceManagementProps {
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 interface Experience {
   id: number;
   title: string;
@@ -29,14 +33,14 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-const ExperienceManagement = () => {
+const ExperienceManagement = ({ setIsVisible }: ExperienceManagementProps) => {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
 
@@ -103,7 +107,7 @@ const ExperienceManagement = () => {
   }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) {
       router.push('/login');
     }
