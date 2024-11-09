@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import ReservationStatusSkeleton from '@/components/status/ReservationStatusSkeleton';
 import StatusDropdown from '@/components/@Shared/dropDown/StatusDropdown';
+import BackButton from '@/components/myInfo/BackButton';
 
 interface ReservationListProps {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,7 +35,8 @@ const ReservationStatus = ({ setIsVisible }: ReservationListProps) => {
           {list && list.data.activities.length > 0 ? (
             <div className="flex flex-col gap-12">
               <div className="flex w-full flex-col gap-[32px]">
-                <div className="flex">
+                <div className="flex items-center gap-3">
+                  <BackButton setIsVisible={setIsVisible} />
                   <h1 className="text-[32px] font-bold">예약 현황</h1>
                 </div>
                 <StatusDropdown
