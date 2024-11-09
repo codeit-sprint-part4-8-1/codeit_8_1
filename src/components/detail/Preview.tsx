@@ -1,4 +1,8 @@
-import { deleteActivityId, fetchActivityIdPreview } from '@/apis/detail/api';
+import {
+  deleteActivityId,
+  fetchActivityIdPreview,
+  modifyActivityId,
+} from '@/apis/detail/api';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import LoadingSpinner from '../@Shared/loading/LoadingSpinner';
@@ -26,7 +30,11 @@ export default function Preview({ detailData }: PreviewProps) {
   const [menuVisible, setMenuVisible] = useState<boolean>(false);
 
   // 체험 삭제
-  const deleteActivity = async ({ activityId }: { activityId: number }) => {
+  const handleDeleteActivity = async ({
+    activityId,
+  }: {
+    activityId: number;
+  }) => {
     setMenuVisible(false);
     try {
       const res = await deleteActivityId({ activityId });
@@ -38,6 +46,23 @@ export default function Preview({ detailData }: PreviewProps) {
       const message =
         error.response?.data?.message || '체험 삭제를 실패했습니다.';
       toast.error(message);
+    }
+  };
+
+  const handleModifyActivity = async ({
+    activityId,
+  }: {
+    activityId: number;
+  }) => {
+    // console.log(activityId);
+    try {
+      const res = await modifyActivityId({ activityId });
+      console.log(res);
+      localStorage.setItem('selectedExperience', JSON.stringify(res));
+
+      router.push(`/activities/edit/${activityId}`);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -68,7 +93,13 @@ export default function Preview({ detailData }: PreviewProps) {
           {menuVisible && (
             <ul className="absolute top-[45px] z-10 w-40 border-2 border-gray-300 rounded-lg bg-white">
               <li className="w-full h-14 border-b-2 border-gray-300 hover:bg-gray-100">
-                <button type="button" className="w-full h-full">
+                <button
+                  type="button"
+                  className="w-full h-full"
+                  onClick={() => {
+                    handleModifyActivity({ activityId: detailData?.id });
+                  }}
+                >
                   수정하기
                 </button>
               </li>
@@ -77,7 +108,7 @@ export default function Preview({ detailData }: PreviewProps) {
                   type="button"
                   className="w-full h-full"
                   onClick={() => {
-                    deleteActivity({ activityId: detailData?.id });
+                    handleDeleteActivity({ activityId: detailData?.id });
                   }}
                 >
                   삭제하기
