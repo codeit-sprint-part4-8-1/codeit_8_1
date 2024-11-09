@@ -220,7 +220,7 @@ export default function ReserveCalendar({ detailData }: ReserveCalendarPros) {
         toastOptions={{
           success: {
             style: {
-              width: '250px',
+              width: 'auto',
               height: '60px',
               background: 'green',
               color: 'white',
@@ -230,7 +230,7 @@ export default function ReserveCalendar({ detailData }: ReserveCalendarPros) {
           },
           error: {
             style: {
-              width: '250px',
+              width: 'auto',
               height: '60px',
               background: 'red',
               color: 'white',

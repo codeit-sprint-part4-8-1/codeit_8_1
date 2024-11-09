@@ -16,7 +16,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   const imageUrl = image || defaultImage;
 
   return (
-    <Link href={`/activity/${id}`} passHref>
+    <Link href={`/detail/${id}`} passHref>
       <div className="w-full max-w-sm rounded-lg overflow-hidden transform transition-transform hover:scale-105 cursor-pointer">
         <div className="w-full h-40 overflow-hidden rounded-lg">
           <img
