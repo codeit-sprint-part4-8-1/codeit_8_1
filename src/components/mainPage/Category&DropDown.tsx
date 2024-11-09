@@ -3,19 +3,21 @@ import MainCategory from '../@Shared/category/MainCategory';
 import DropDownMenu from '../@Shared/dropDown/DropDownMenu';
 
 interface CategoryAndDropDownProps {
-  setSelectedCategory: (category: string | null) => void;
+  setSelectedCategory: (category: string | null) => void; // 카테고리 상태를 부모 컴포넌트에 전달
+  setSelectedSort: (sort: string | null) => void; // 정렬 상태를 부모 컴포넌트에 전달
 }
 
 export default function CategoryAndDropDown({
   setSelectedCategory,
+  setSelectedSort,
 }: CategoryAndDropDownProps) {
   const MENU_LIST = [
     {
-      id: null,
+      id: 'price_asc',
       text: '가격 낮은 순',
     },
     {
-      id: null,
+      id: 'price_desc',
       text: '가격 높은 순',
     },
   ];
@@ -29,6 +31,8 @@ export default function CategoryAndDropDown({
         size={'small'}
         filterList={MENU_LIST}
         setFilterStatus={setFilterStatus}
+        setSelectedSort={setSelectedSort}
+        defaultText={'가격'}
       />
     </div>
   );

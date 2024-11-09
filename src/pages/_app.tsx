@@ -20,16 +20,16 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <RootProvider>
-        <GNB />
-        {/* 컨테이너 컴포넌트에 fullWidth prop을 전달 */}
-        <Container fullWidth={isMainPage}>
-          <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <RootProvider>
+          <GNB />
+          {/* 컨테이너 컴포넌트에 fullWidth prop을 전달 */}
+          <Container fullWidth={isMainPage}>
             <Component {...pageProps} />
-          </QueryClientProvider>
-        </Container>
-        <Footer className="mt-auto" />
-      </RootProvider>
+          </Container>
+          <Footer className="mt-auto" />
+        </RootProvider>
+      </QueryClientProvider>
     </div>
   );
 }
