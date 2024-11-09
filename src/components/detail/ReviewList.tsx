@@ -22,9 +22,9 @@ export default function ReviewList({ activityId }: ReviewListProps) {
         page: currentPage,
         size: PAGE_SIZE,
       });
-      console.log(res);
       return res;
     },
+    enabled: !!activityId,
   });
 
   const resultRating = Math.floor(data?.averageRating * 10) / 10; // 소수점 첫째자리까지만 보이도록
