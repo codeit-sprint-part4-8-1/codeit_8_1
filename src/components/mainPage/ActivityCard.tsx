@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { ActivityCardProps } from '../../types/mainPage/ActivityCardTypes';
 
+const defaultImage = '/image/defaultImage.png'; // 기본 이미지
+
 export const ActivityCard: React.FC<ActivityCardProps> = ({
   id,
   image,
@@ -10,11 +12,18 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   title,
   price,
 }) => {
+  // imageUrl이 없으면 기본 이미지로 대체
+  const imageUrl = image || defaultImage;
+
   return (
     <Link href={`/activity/${id}`} passHref>
       <div className="w-full max-w-sm rounded-lg overflow-hidden transform transition-transform hover:scale-105 cursor-pointer">
         <div className="w-full h-40 overflow-hidden rounded-lg">
-          <img src={image} alt={title} className="w-full h-full object-cover" />
+          <img
+            src={imageUrl}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
         </div>
         <div className="p-3">
           <div className="flex items-center text-black text-left">
