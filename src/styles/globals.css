@@ -43,6 +43,42 @@ body {
   .skeleton-line-height {
     line-height: inherit !important;
   }
+
+  .react-calendar {
+    width: 100% !important;
+    border: 1px solid #dddddd !important;
+    border-radius: 12px;
+    padding: 10px 24px;
+  }
+
+  .react-calendar button span {
+    font-weight: bold;
+  }
+
+  .react-calendar .react-calendar__month-view__days__day--weekend {
+    color: #141414 !important;
+  }
+  .react-calendar .react-calendar__tile--active {
+    background: #0b3b2d !important;
+    color: #ffffff !important;
+    border-radius: 8px;
+  }
+
+  .react-calendar .react-calendar__tile--now {
+    background: #ced8d5;
+    border-radius: 8px;
+  }
+
+  .react-calendar abbr {
+    text-decoration: none;
+  }
+
+  .reserved-date {
+    /* color: white !important; */
+    /* background: #0b3b2d !important; */
+    border-radius: 8px !important;
+    border: 1px solid #0b3b2d !important;
+  }
 }
 footer {
   position: relative; /* 푸터가 상대적으로 위치하게 함 */
