@@ -13,9 +13,13 @@ interface Activity {
 
 interface ActivityListProps {
   selectedCategory: string | null;
+  selectedSort: string | null;
 }
 
-export default function ActivityList({ selectedCategory }: ActivityListProps) {
+export default function ActivityList({
+  selectedCategory,
+  selectedSort,
+}: ActivityListProps) {
   const [activities, setActivities] = useState<Activity[]>([]); // 체험 데이터 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
   const [itemsPerPage, setItemsPerPage] = useState(6); // 한 페이지 당 아이템 수
@@ -74,6 +78,11 @@ export default function ActivityList({ selectedCategory }: ActivityListProps) {
           params.category = selectedCategory;
         }
 
+        // 정렬 옵션을 API에 전달
+        if (selectedSort) {
+          params.sort = selectedSort; // 가격 낮은 순 / 가격 높은 순 등의 정렬 값
+        }
+
         // API 요청
         const response = await axios.get(apiUrl, { params });
 
@@ -86,13 +95,12 @@ export default function ActivityList({ selectedCategory }: ActivityListProps) {
         setLoading(false);
       } catch (err) {
         setError('데이터를 가져오는 데 실패했습니다.');
-        console.error('API 요청 오류:', err);
         setLoading(false);
       }
     };
 
     fetchActivities(); // 데이터 다시 불러오기
-  }, [selectedCategory, currentPage, itemsPerPage]);
+  }, [selectedCategory, selectedSort, currentPage, itemsPerPage]);
 
   // 페이지 변경 시 새 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {

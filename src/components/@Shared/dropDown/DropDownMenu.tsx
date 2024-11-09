@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 interface FilterList {
@@ -11,6 +11,8 @@ interface DropDownMenuProps {
   size?: string;
   filterList: FilterList[];
   setFilterStatus: React.Dispatch<React.SetStateAction<string | null>>;
+  setSelectedSort: (sort: string | null) => void;
+  defaultText?: string;
 }
 
 /**
@@ -31,9 +33,18 @@ interface DropDownMenuProps {
 export default function DropDownMenu({
   filterList,
   setFilterStatus,
+  setSelectedSort,
+  defaultText = '전체', // 기본 텍스트 '전체'
 }: DropDownMenuProps) {
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [filterText, setFilterText] = useState<string>('전체');
+  const [filterText, setFilterText] = useState<string>(defaultText); // 기본 텍스트 설정
+
+  // filterList의 첫 번째 항목이 있을 경우 filterText를 해당 항목으로 업데이트
+  useEffect(() => {
+    if (filterList.length > 0 && filterText === defaultText) {
+      setFilterText(defaultText); // defaultText가 기본값이면 그대로 두기
+    }
+  }, [filterList, defaultText, filterText]);
 
   return (
     <div className="relative bg-white z-10">
@@ -73,7 +84,8 @@ export default function DropDownMenu({
                 onClick={() => {
                   setFilterText(filter.text);
                   setIsActive(false);
-                  setFilterStatus(filter.id);
+                  setFilterStatus(filter.id); // 필터 상태 업데이트
+                  setSelectedSort(filter.id); // 정렬 상태 업데이트
                 }}
               >
                 {filter.text}

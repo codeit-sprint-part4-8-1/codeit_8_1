@@ -6,7 +6,8 @@ import CategoryAndDropDown from '@/components/mainPage/Category&DropDown';
 import ActivityList from '@/components/mainPage/ActivityList';
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // 선택된 카테고리 상태
+  const [selectedSort, setSelectedSort] = useState<string | null>(null); // 선택된 정렬 상태
 
   return (
     <div className="relative w-full">
@@ -30,11 +31,17 @@ export default function Home() {
       </div>
       <div className="relative mobile:mt-[40px] tablet2:mt-[60px] pc:mt-[60px] z-30 flex justify-center">
         {/* 카테고리 선택 컴포넌트에 선택된 카테고리 상태 전달 */}
-        <CategoryAndDropDown setSelectedCategory={setSelectedCategory} />
+        <CategoryAndDropDown
+          setSelectedCategory={setSelectedCategory}
+          setSelectedSort={setSelectedSort}
+        />
       </div>
       <div className="relative flex justify-center mobile:mb-[83px] tablet2:mb-[153px] pc:mb-[222px]">
         {/* 선택된 카테고리에 맞춰 필터링된 체험 목록을 전달 */}
-        <ActivityList selectedCategory={selectedCategory} />
+        <ActivityList
+          selectedCategory={selectedCategory}
+          selectedSort={selectedSort}
+        />
       </div>
     </div>
   );
