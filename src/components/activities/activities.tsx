@@ -189,9 +189,9 @@ const ExperienceForm = () => {
       );
 
       console.log('폼 제출 성공:', response.data);
+      router.push('/activities/detail');
     } catch (error) {
       console.error('폼 제출 실패:', error);
-      // 에러 처리 (예: 에러 메시지 표시)
     }
   };
 
@@ -201,7 +201,6 @@ const ExperienceForm = () => {
         <h2 className="text-2xl font-bold">내 체험 등록</h2>
         <button
           type="submit"
-          onClick={() => router.push('/activities/detail')}
           className="w-[120px] p-2 bg-nomadBlack text-white rounded font-medium"
         >
           등록하기
