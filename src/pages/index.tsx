@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Banner from '@/components/main/Banner';
 import SearchBar from '@/components/@Shared/searchBar/SearchBar';
 import HotActivityList from '@/components/mainPage/HotActivityList';
@@ -8,6 +8,12 @@ import ActivityList from '@/components/mainPage/ActivityList';
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // 선택된 카테고리 상태
   const [selectedSort, setSelectedSort] = useState<string | null>(null); // 선택된 정렬 상태
+  const [searchKeyword, setSearchKeyword] = useState<string>(''); // 검색어 상태
+  const [totalItems, setTotalItems] = useState<number>(0); // 검색된 총 아이템 수
+
+  useEffect(() => {
+    setTotalItems(0); // 검색어가 변경될 때마다 총 아이템 수 리셋
+  }, [searchKeyword]);
 
   return (
     <div className="relative w-full">
@@ -24,7 +30,10 @@ export default function Home() {
         <Banner />
       </div>
       <div className="absolute top-[180px] sm:top-[490px] left-1/2 transform -translate-x-1/2 z-20">
-        <SearchBar />
+        <SearchBar
+          setSearchKeyword={setSearchKeyword}
+          setTotalItems={setTotalItems}
+        />
       </div>
       <div className="relative mobile:mt-[100px] tablet2:mt-[142px] pc:mt-[158px] z-30 flex justify-center">
         <HotActivityList />
@@ -41,6 +50,8 @@ export default function Home() {
         <ActivityList
           selectedCategory={selectedCategory}
           selectedSort={selectedSort}
+          searchKeyword={searchKeyword}
+          setTotalItems={setTotalItems}
         />
       </div>
     </div>

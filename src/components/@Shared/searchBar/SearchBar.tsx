@@ -1,7 +1,15 @@
 import { useRouter } from 'next/router';
 import React, { useState, ChangeEvent, MouseEvent } from 'react';
 
-const SearchBar = () => {
+interface SearchBarProps {
+  setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
+  setTotalItems: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({
+  setSearchKeyword,
+  setTotalItems,
+}) => {
   const [searchWord, setSearchWord] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const router = useRouter();
@@ -22,6 +30,7 @@ const SearchBar = () => {
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setSearchKeyword(searchWord); // 검색어 업데이트
     if (searchWord === '') router.push('/');
     else router.push(`/search?keyword=${searchWord}`);
   };
