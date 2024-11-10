@@ -2,21 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
-const EditExperience = () => {
-  const [token, setToken] = useState('');
-  const [experienceData, setExperienceData] = useState({
+interface ExperienceData {
+  title: string;
+  category: string;
+  description: string;
+  price: number;
+}
+
+interface Schedule {
+  id: number | null;
+  date: string;
+  startTime: string;
+  endTime: string;
+}
+
+interface SubImage {
+  id: number | null;
+  imageUrl: string;
+}
+
+const EditExperience: React.FC = () => {
+  const [token, setToken] = useState<string>('');
+  const [experienceData, setExperienceData] = useState<ExperienceData>({
     title: '',
     category: '',
     description: '',
     price: 0,
   });
-  const [availableTimes, setAvailableTimes] = useState([
+  const [availableTimes, setAvailableTimes] = useState<Schedule[]>([
     { id: null, date: '', startTime: '', endTime: '' },
   ]);
-  const [deletedScheduleIds, setDeletedScheduleIds] = useState([]);
-  const [bannerImageUrl, setBannerImageUrl] = useState('');
-  const [subImageUrls, setSubImageUrls] = useState([]);
-  const [deletedSubImageIds, setDeletedSubImageIds] = useState([]);
+  const [deletedScheduleIds, setDeletedScheduleIds] = useState<number[]>([]);
+  const [bannerImageUrl, setBannerImageUrl] = useState<string>('');
+  const [subImageUrls, setSubImageUrls] = useState<SubImage[]>([]);
+  const [deletedSubImageIds, setDeletedSubImageIds] = useState<number[]>([]);
 
   const router = useRouter();
   const { experienceId } = router.query;
@@ -24,8 +43,8 @@ const EditExperience = () => {
   const removeSubImage = (index: number) => {
     const updatedSubImageUrls = [...subImageUrls];
     const removedImage = updatedSubImageUrls[index];
-    if (removedImage.id) {
-      setDeletedSubImageIds((prev) => [...prev, removedImage.id]);
+    if (removedImage.id !== null) {
+      setDeletedSubImageIds((prev) => [...prev, removedImage.id as number]);
     }
     updatedSubImageUrls.splice(index, 1);
     setSubImageUrls(updatedSubImageUrls);
@@ -41,15 +60,15 @@ const EditExperience = () => {
   const removeAvailableTime = (index: number) => {
     const updatedTimes = [...availableTimes];
     const removedTime = updatedTimes[index];
-    if (removedTime.id) {
-      setDeletedScheduleIds((prev) => [...prev, removedTime.id]);
+    if (removedTime.id !== null) {
+      setDeletedScheduleIds((prev) => [...prev, removedTime.id as number]);
     }
     updatedTimes.splice(index, 1);
     setAvailableTimes(updatedTimes);
   };
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
+    const storedToken = localStorage.getItem('accessToken');
     if (!storedToken) {
       router.push('/login'); // 토큰이 없으면 로그인 페이지로 리다이렉트
       return;
@@ -61,14 +80,14 @@ const EditExperience = () => {
       const parsedData = JSON.parse(storedExperience);
       setExperienceData(parsedData);
       setAvailableTimes(
-        parsedData.schedules?.map((schedule) => ({
+        parsedData.schedules?.map((schedule: Schedule) => ({
           ...schedule,
           id: schedule.id,
         })) || [{ id: null, date: '', startTime: '', endTime: '' }],
       );
       setBannerImageUrl(parsedData.bannerImageUrl || '');
       setSubImageUrls(
-        parsedData.subImages?.map((image) => ({
+        parsedData.subImages?.map((image: SubImage) => ({
           id: image.id,
           imageUrl: image.imageUrl,
         })) || [],
@@ -79,7 +98,9 @@ const EditExperience = () => {
     }
   }, [router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setExperienceData((prevData) => ({
       ...prevData,
@@ -87,7 +108,11 @@ const EditExperience = () => {
     }));
   };
 
-  const handleTimeChange = (index: number, field: string, value: string) => {
+  const handleTimeChange = (
+    index: number,
+    field: keyof Schedule,
+    value: string,
+  ) => {
     const updatedTimes = [...availableTimes];
     updatedTimes[index] = { ...updatedTimes[index], [field]: value };
     setAvailableTimes(updatedTimes);
@@ -149,7 +174,7 @@ const EditExperience = () => {
       const newSubImageUrls = await Promise.all(promises);
       setSubImageUrls((prevImages) => [
         ...prevImages,
-        ...newSubImageUrls.filter(Boolean),
+        ...(newSubImageUrls.filter(Boolean) as SubImage[]),
       ]);
     }
   };

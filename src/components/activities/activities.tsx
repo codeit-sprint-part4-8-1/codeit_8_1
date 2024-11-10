@@ -103,22 +103,21 @@ const ExperienceForm = () => {
     }).open();
   };
 
-  // 이미지 업로드 함수 수정
   const uploadImage = async (image: File) => {
     const formData = new FormData();
     formData.append('image', image);
 
     try {
       console.log('이미지 업로드 시작:', image.name);
+      const token = localStorage.getItem('accessToken');
       const response = await axios.post(
         'https://sp-globalnomad-api.vercel.app/8-1/activities/image',
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwODA1NTA3LCJleHAiOjE3MzA4MDczMDcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.4_MDgAToctKizdY-f956icNc7monG9vEglGX2Gv4UV4`,
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: false,
         },
       );
       console.log('이미지 업로드 응답:', response.data);
@@ -139,6 +138,7 @@ const ExperienceForm = () => {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem('accessToken');
       let bannerImageUrl = '';
       if (bannerImages.length > 0) {
         console.log('배너 이미지 업로드 시작');
@@ -181,7 +181,7 @@ const ExperienceForm = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzOSwidGVhbUlkIjoiOC0xIiwiaWF0IjoxNzMwODA1NTA3LCJleHAiOjE3MzA4MDczMDcsImlzcyI6InNwLWdsb2JhbG5vbWFkIn0.4_MDgAToctKizdY-f956icNc7monG9vEglGX2Gv4UV4`,
+            Authorization: `Bearer ${token}`,
           },
         },
       );

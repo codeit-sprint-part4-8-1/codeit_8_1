@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import ReservationList from '@/components/history/ReservationList';
 import { match } from 'ts-pattern';
 import ReservationStatus from '../status';
+import ExperienceManagement from '@/components/activities/detail';
 
 const MyInfoContent = () => {
   const { data, isLoading } = useUserInfo();
@@ -63,6 +64,11 @@ const MyInfoContent = () => {
         .with('예약 내역', () => (
           <MoContainer isVisible={isVisible}>
             <ReservationList setIsVisible={setIsVisible} />
+          </MoContainer>
+        ))
+        .with('내 체험 관리', () => (
+          <MoContainer isVisible={isVisible}>
+            <ExperienceManagement setIsVisible={setIsVisible} />
           </MoContainer>
         ))
         .with('예약 현황', () => (

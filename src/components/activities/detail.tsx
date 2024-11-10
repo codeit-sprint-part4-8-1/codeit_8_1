@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
+import { HiDotsVertical } from 'react-icons/hi';
+
+interface ExperienceManagementProps {
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 interface Experience {
   id: number;
@@ -20,21 +25,24 @@ interface APIResponse {
 }
 
 const API_BASE_URL = 'https://sp-globalnomad-api.vercel.app/8-1';
+const INITIAL_PAGE_SIZE = 4;
+const SUBSEQUENT_PAGE_SIZE = 2;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-const ExperienceManagement = () => {
+const ExperienceManagement = ({ setIsVisible }: ExperienceManagementProps) => {
   const router = useRouter();
+  const [dropdownOpen, setDropdownOpen] = useState<number | null>(null);
 
   const handleEdit = async (experienceId: number) => {
     try {
@@ -65,11 +73,15 @@ const ExperienceManagement = () => {
     }
   };
 
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+    delay: 100,
+  });
 
   const fetchExperiencePage = async ({ pageParam = 0 }) => {
+    const pageSize = pageParam === 0 ? INITIAL_PAGE_SIZE : SUBSEQUENT_PAGE_SIZE;
     const response = await api.get<APIResponse>(
-      `/my-activities?cursor=${pageParam}`,
+      `/my-activities?cursor=${pageParam}&limit=${pageSize}`,
     );
     return response.data;
   };
@@ -94,13 +106,21 @@ const ExperienceManagement = () => {
     }
   }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // 로그인 상태 확인
   React.useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) {
       router.push('/login');
     }
   }, [router]);
+
+  // Add fade-in animation
+  const getAnimationDelay = (pageIndex: number, indexInPage: number) => {
+    if (pageIndex === 0) {
+      return indexInPage * 0.1; // First page (4 items)
+    }
+    // Subsequent pages (2 items per page)
+    return (pageIndex * SUBSEQUENT_PAGE_SIZE + indexInPage) * 0.1;
+  };
 
   return (
     <div className="container mx-auto w-[800px] p-4">
@@ -122,9 +142,12 @@ const ExperienceManagement = () => {
               <div
                 key={`${experience.id}-${index}`}
                 className="border border-gray-200 rounded-lg shadow-lg overflow-hidden w-full h-[204px] flex 
-                         transition-all duration-300 ease-in-out opacity-100 hover:shadow-xl"
+                         transition-all duration-300 ease-in-out opacity-0"
                 style={{
-                  animation: `slideIn 0.5s ease-out ${index * 0.1}s forwards`,
+                  animation: `fadeIn 0.5s ease-out ${getAnimationDelay(
+                    pageIndex,
+                    index,
+                  )}s forwards`,
                 }}
               >
                 <div className="w-[204px] h-[204px] overflow-hidden">
@@ -141,11 +164,37 @@ const ExperienceManagement = () => {
                   />
                 </div>
 
-                <div className="pl-6 flex flex-col py-5 flex-grow">
-                  <div className="flex items-center">
+                <div className="pl-6 flex flex-col py-5 flex-grow relative">
+                  <div className="flex items-center justify-between">
                     <span className="text-gray-800 font-semibold pb-1">
                       ⭐ 평점 {experience.rating?.toFixed(1) || 'N/A'}
                     </span>
+                    <div
+                      className="relative"
+                      onClick={() =>
+                        setDropdownOpen(
+                          dropdownOpen === experience.id ? null : experience.id,
+                        )
+                      }
+                    >
+                      <HiDotsVertical className="cursor-pointer text-gray-600 hover:text-gray-800" />
+                      {dropdownOpen === experience.id && (
+                        <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
+                          <button
+                            onClick={() => handleEdit(experience.id)}
+                            className="block w-full text-left px-4 py-2 text-blue-600 hover:bg-gray-100"
+                          >
+                            수정하기
+                          </button>
+                          <button
+                            onClick={() => handleDelete(experience.id)}
+                            className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                          >
+                            삭제하기
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <h3 className="text-xl font-semibold pb-16 transition-colors hover:text-blue-600">
                     {experience.title}
@@ -157,20 +206,6 @@ const ExperienceManagement = () => {
                     <span className="text-gray-800 font-semibold text-xl pl-2">
                       {experience.price?.toLocaleString() || '0'}원
                     </span>
-                  </div>
-                  <div className="flex items-center gap-4 mt-2">
-                    <button
-                      onClick={() => handleEdit(experience.id)}
-                      className="text-blue-600 hover:text-blue-800 focus:text-blue-800"
-                    >
-                      수정하기
-                    </button>
-                    <button
-                      onClick={() => handleDelete(experience.id)}
-                      className="text-red-600 hover:text-red-800 focus:text-red-800"
-                    >
-                      삭제하기
-                    </button>
                   </div>
                 </div>
               </div>
@@ -190,6 +225,19 @@ const ExperienceManagement = () => {
           <div className="text-gray-500">모든 데이터를 불러왔습니다</div>
         )}
       </div>
+
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };
