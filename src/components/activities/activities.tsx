@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Category from '@/components/@Shared/dropDown/Dropdown';
+import { useRouter } from 'next/router';
+import Category from '@/components/@Shared/dropdown/Dropdown';
 import axios from 'axios';
 
 const ExperienceForm = () => {
@@ -15,6 +16,7 @@ const ExperienceForm = () => {
   const [postcode, setPostcode] = useState('');
   const [bannerImages, setBannerImages] = useState<File[]>([]);
   const [introImages, setIntroImages] = useState<File[]>([]);
+  const router = useRouter();
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrice(e.target.value ? Number(e.target.value) : '');
@@ -199,6 +201,7 @@ const ExperienceForm = () => {
         <h2 className="text-2xl font-bold">내 체험 등록</h2>
         <button
           type="submit"
+          onClick={() => router.push('/activities/detail')}
           className="w-[120px] p-2 bg-nomadBlack text-white rounded font-medium"
         >
           등록하기
