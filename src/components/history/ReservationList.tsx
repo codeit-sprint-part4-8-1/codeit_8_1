@@ -59,6 +59,7 @@ export default function ReservationList({
   const [reviewData, setReviewData] = useState<any>();
   const [reservationId, setReservationId] = useState<number>();
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
+  const [selectedSort, setSelectedSort] = useState<string | null>(null);
   const loadMoreRef = useRef(null);
 
   const {
@@ -124,6 +125,7 @@ export default function ReservationList({
           <DropDownMenu
             size="large"
             setFilterStatus={setFilterStatus}
+            setSelectedSort={setSelectedSort}
             filterList={MENU_LIST}
           />
         </div>

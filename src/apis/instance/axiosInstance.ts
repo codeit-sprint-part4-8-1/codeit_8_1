@@ -17,7 +17,7 @@ axiosInstance.interceptors.request.use(
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
@@ -45,5 +45,5 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(refreshError);
     }
     return Promise.reject(error);
-  }
+  },
 );

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { HiDotsVertical } from 'react-icons/hi';
+import BackButton from '../myInfo/BackButton';
 
 interface ExperienceManagementProps {
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -123,9 +124,12 @@ const ExperienceManagement = ({ setIsVisible }: ExperienceManagementProps) => {
   };
 
   return (
-    <div className="container mx-auto w-[800px] p-4">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">내 체험 관리</h2>
+        <div className="flex items-center gap-3">
+          <BackButton setIsVisible={setIsVisible} />
+          <h2 className="text-2xl font-bold">내 체험 관리</h2>
+        </div>
         <button
           type="button"
           onClick={() => router.push('/activities/activities')}

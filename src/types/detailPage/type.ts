@@ -26,3 +26,24 @@ export interface Detail {
   updateAt: string;
   userId: number;
 }
+
+export interface ActivityId {
+  activityId: number;
+}
+export interface FetchActivityIdReview {
+  activityId: number;
+  page?: number;
+  size?: number;
+}
+
+export interface PostActivityIdReserve {
+  activityId: number;
+  scheduleId: number;
+  headCount: number;
+}
+
+export interface FetchReserveCheck {
+  activityId: number;
+  year: string;
+  month: string;
+}

@@ -9,6 +9,7 @@ import ReservationList from '@/components/history/ReservationList';
 import { match } from 'ts-pattern';
 import ReservationStatus from '../status';
 import ExperienceManagement from '@/components/activities/detail';
+import { useRouter } from 'next/router';
 
 const MyInfoContent = () => {
   const { data, isLoading } = useUserInfo();
@@ -16,6 +17,8 @@ const MyInfoContent = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
+    const menuName = localStorage.getItem('menu');
+    setMenuValue(menuName || '내 정보');
     const windowResize = () => {
       if (window.innerWidth > 767) {
         setIsVisible(true);
@@ -32,6 +35,7 @@ const MyInfoContent = () => {
   }, []);
 
   const handleMenuClick = (value: string) => {
+    localStorage.removeItem('menu');
     setMenuValue(value);
     if (window.innerWidth <= 767) {
       setIsVisible(true);

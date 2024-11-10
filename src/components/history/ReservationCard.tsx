@@ -19,6 +19,7 @@ export default function ReservationCard({
   handleReviewClick,
 }: ReservationCardProps) {
   const { statusText, statusColor } = statusValue;
+  const test = 10000;
 
   return (
     <div className="flex rounded-3xl overflow-hidden bg-white mb-6 shadow-[0px_0px_10px_rgba(0,0,0,0.1)]">
@@ -43,7 +44,9 @@ export default function ReservationCard({
           {res.date} ・ {res.startTime} - {res.endTime} {res.headCount}명
         </span>
         <div className="flex justify-between items-center">
-          <span className="text-[16px] sm:text-xl lg:text-2xl">₩10000</span>
+          <span className="text-[16px] sm:text-xl lg:text-2xl">
+            ₩{res.totalPrice.toLocaleString()}
+          </span>
           {statusText === '예약 신청' && (
             <>
               <Button
