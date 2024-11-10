@@ -10,6 +10,7 @@ import { RootProvider } from '@/hook/useRoot';
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isMainPage = router.pathname === '/'; // 메인 페이지 여부 확인
+  const isSearchPage = router.pathname.startsWith('/search'); // 검색 페이지 여부 확인
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -24,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <RootProvider>
           <GNB />
           {/* 컨테이너 컴포넌트에 fullWidth prop을 전달 */}
-          <Container fullWidth={isMainPage}>
+          <Container fullWidth={isMainPage || isSearchPage}>
             <Component {...pageProps} />
           </Container>
           <Footer className="mt-auto" />

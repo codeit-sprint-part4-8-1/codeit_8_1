@@ -14,18 +14,27 @@ interface Activity {
 interface ActivityListProps {
   selectedCategory: string | null;
   selectedSort: string | null;
+  searchKeyword: string;
+  setTotalItems: (total: number) => void;
 }
 
 export default function ActivityList({
   selectedCategory,
   selectedSort,
+  searchKeyword,
+  setTotalItems,
 }: ActivityListProps) {
   const [activities, setActivities] = useState<Activity[]>([]); // 체험 데이터 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
   const [itemsPerPage, setItemsPerPage] = useState(6); // 한 페이지 당 아이템 수
   const [loading, setLoading] = useState<boolean>(true); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
-  const [totalItems, setTotalItems] = useState<number>(0); // 총 아이템 수
+  const [totalItems, setTotalItemsState] = useState<number>(0); // 총 아이템 수
+
+  // 검색어가 바뀌면 페이지를 1로 리셋하고 데이터를 새로 불러옵니다.
+  useEffect(() => {
+    setCurrentPage(1); // 페이지를 1로 초기화
+  }, [searchKeyword]);
 
   // 화면 크기에 따라 표시할 카드 수를 결정
   const updateItemsPerPage = () => {
@@ -83,6 +92,11 @@ export default function ActivityList({
           params.sort = selectedSort; // 가격 낮은 순 / 가격 높은 순 등의 정렬 값
         }
 
+        // 검색 키워드를 API에 전달
+        if (searchKeyword) {
+          params.keyword = searchKeyword;
+        }
+
         // API 요청
         const response = await axios.get(apiUrl, { params });
 
@@ -91,16 +105,24 @@ export default function ActivityList({
 
         // 데이터를 새로 덮어쓰지 않고 기존 데이터에 추가
         setActivities(response.data.activities);
-        setTotalItems(response.data.totalCount); // 총 아이템 수 업데이트
+        setTotalItems(response.data.totalCount);
         setLoading(false);
       } catch (err) {
+        console.error('API 요청 실패:', err);
         setError('데이터를 가져오는 데 실패했습니다.');
         setLoading(false);
       }
     };
 
-    fetchActivities(); // 데이터 다시 불러오기
-  }, [selectedCategory, selectedSort, currentPage, itemsPerPage]);
+    fetchActivities();
+  }, [
+    selectedCategory,
+    selectedSort,
+    currentPage,
+    itemsPerPage,
+    searchKeyword,
+    setTotalItems,
+  ]);
 
   // 페이지 변경 시 새 데이터를 가져오는 함수
   const handlePageChange = (page: number) => {
@@ -119,25 +141,39 @@ export default function ActivityList({
     return <div>{error}</div>;
   }
 
+  // 제목 부분에 조건을 명확하게 나눠서 처리
+  let title = '🛼 모든 체험'; // 기본값
+
+  if (searchKeyword) {
+    title = '';
+  } else if (selectedCategory) {
+    title = `${selectedCategory}`;
+  }
+
   return (
     <div className="container mx-auto">
       <h2 className="text-2xl text-black text-left font-semibold mb-4">
-        {selectedCategory ? `${selectedCategory}` : '🛼 모든 체험'}
+        {title}
       </h2>
+
       {/* 카드 목록 */}
-      <div className="grid gap-4 px-4 sm:px-8 lg:px-0 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-        {activities.map((activity) => (
-          <ActivityCard
-            key={activity.id}
-            id={activity.id}
-            image={activity.imageUrl}
-            title={activity.title}
-            rating={activity.rating}
-            reviews={activity.reviews}
-            price={activity.price}
-          />
-        ))}
-      </div>
+      {activities.length > 0 ? (
+        <div className="grid gap-4 px-4 sm:px-8 lg:px-0 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+          {activities.map((activity) => (
+            <ActivityCard
+              key={activity.id}
+              id={activity.id}
+              image={activity.imageUrl}
+              title={activity.title}
+              rating={activity.rating}
+              reviews={activity.reviews}
+              price={activity.price}
+            />
+          ))}
+        </div>
+      ) : (
+        <div>검색된 결과가 없습니다.</div>
+      )}
 
       {/* 페이지네이션 */}
       {totalPages > 0 && (
